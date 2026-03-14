@@ -245,7 +245,7 @@ export default function Home() {
               regiao. No Norte Vivo, cada negocio pode ter perfil, vitrine
               publica e mais chances de aparecer para novos clientes.
             </p>
-            <div className="mx-auto mt-6 grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto mt-6 hidden max-w-5xl grid-cols-2 gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-4">
               {quickLinks.map(item => {
                 const Icon = item.icon;
 
@@ -273,6 +273,51 @@ export default function Home() {
                   </Link>
                 );
               })}
+            </div>
+            <div className="mt-6 sm:hidden">
+              <Carousel
+                opts={{ align: "start", loop: true }}
+                setApi={setCategoryCarouselApi}
+              >
+                <CarouselContent className="-ml-3">
+                  {(featuredCategories ?? categories ?? []).map(category => {
+                    const Icon =
+                      ICON_MAP[category.icon || "Tag"] ?? ShoppingBag;
+                    const colorClass =
+                      CATEGORY_COLORS[category.slug] ??
+                      "bg-white text-blue-700 hover:bg-blue-50";
+
+                    return (
+                      <CarouselItem
+                        key={category.id}
+                        className="basis-[72%] pl-3"
+                      >
+                        <Link
+                          href={`/categoria/${category.slug}`}
+                          className="block rounded-[24px] bg-white/12 p-4 text-left text-white backdrop-blur-sm"
+                        >
+                          <div
+                            className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white ${colorClass}`}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <p className="mt-4 text-xl font-bold text-white">
+                            {category.name}
+                          </p>
+                          <p className="mt-2 text-sm text-blue-50/90">
+                            Explore vitrines, produtos e servicos desta
+                            categoria.
+                          </p>
+                          <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-white">
+                            Ver categoria
+                            <ArrowRight className="h-4 w-4" />
+                          </div>
+                        </Link>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+              </Carousel>
             </div>
           </div>
         </div>
