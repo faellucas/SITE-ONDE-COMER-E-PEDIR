@@ -260,8 +260,8 @@ export default function Home() {
       </section>
 
       <section className="container py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <h2 className="section-heading">Empresas em destaque</h2>
             <p className="text-sm text-gray-500">
               Conheca negocios da regiao e ganhe mais visibilidade para sua
@@ -270,7 +270,7 @@ export default function Home() {
           </div>
           <Link
             href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}
-            className="text-sm font-medium text-orange-600 hover:underline"
+            className="text-sm font-medium text-orange-600 hover:underline sm:shrink-0"
           >
             Cadastrar empresa
           </Link>
