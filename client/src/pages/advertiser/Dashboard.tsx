@@ -22,6 +22,8 @@ import {
   AlertCircle,
   ChevronRight,
   Clock3,
+  CookingPot,
+  Cpu,
   Pencil,
   Eye,
   Heart,
@@ -34,9 +36,11 @@ import {
   Play,
   Plus,
   Save,
+  Shirt,
   Star,
   Trash2,
   Trophy,
+  CarFront,
   Zap,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -49,6 +53,14 @@ const STATUS_CONFIG: Record<string, { label: string; badge: string }> = {
   rejected: { label: "Rejeitado", badge: "bg-red-50 text-red-700" },
   expired: { label: "Expirado", badge: "bg-rose-50 text-rose-700" },
 };
+
+const SEGMENT_ICON = {
+  generic: Store,
+  food: CookingPot,
+  vehicles: CarFront,
+  fashion: Shirt,
+  electronics: Cpu,
+} as const;
 
 export default function AdvertiserDashboard() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -157,6 +169,7 @@ export default function AdvertiserDashboard() {
   );
   const segment = getSegmentFromCategorySlug(primaryCategory?.slug);
   const segmentContent = SEGMENT_CONTENT[segment];
+  const SegmentIcon = SEGMENT_ICON[segment];
   const trialDaysLeft = user?.trialStartedAt
     ? Math.max(0, 30 - Math.floor((Date.now() - new Date(user.trialStartedAt).getTime()) / 86400000))
     : 30;
@@ -192,13 +205,14 @@ export default function AdvertiserDashboard() {
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
                 <LayoutDashboard className="h-4 w-4" />
-                Painel do cliente
+                {segmentContent.quickLabel}
               </div>
               <h1 className="font-display text-3xl font-black text-gray-900">
-                {user?.name ? `Ola, ${user.name.split(" ")[0]}` : "Seu painel"}
+                {segmentContent.dashboardTitle}
               </h1>
               <p className="mt-2 max-w-2xl text-gray-500">
-                Visualize seus produtos, acompanhe resultados e gerencie o que esta no ar.
+                {user?.name ? `Ola, ${user.name.split(" ")[0]}. ` : ""}
+                {segmentContent.dashboardSubtitle}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -234,10 +248,34 @@ export default function AdvertiserDashboard() {
 
         <section className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: "Anuncios", value: stats?.totalListings ?? 0, note: `${stats?.statusBreakdown.active ?? 0} ativos`, icon: Package, tone: "bg-blue-50 text-blue-700" },
-            { label: "Visualizacoes", value: stats?.totalViews ?? 0, note: "alcance total", icon: Eye, tone: "bg-violet-50 text-violet-700" },
-            { label: "Contatos", value: stats?.totalContacts ?? 0, note: `${stats?.totalFavorites ?? 0} favoritos`, icon: MessageSquare, tone: "bg-emerald-50 text-emerald-700" },
-            { label: "Booster", value: stats?.activeBoosters ?? 0, note: `${stats?.boostedListings ?? 0} turbinado(s)`, icon: Zap, tone: "bg-amber-50 text-amber-700" },
+            {
+              label: segmentContent.metrics[0]?.label ?? "Anuncios",
+              value: stats?.totalListings ?? 0,
+              note: segmentContent.metrics[0]?.helper ?? `${stats?.statusBreakdown.active ?? 0} ativos`,
+              icon: Package,
+              tone: "bg-blue-50 text-blue-700",
+            },
+            {
+              label: segmentContent.metrics[1]?.label ?? "Visualizacoes",
+              value: stats?.totalViews ?? 0,
+              note: segmentContent.metrics[1]?.helper ?? "alcance total",
+              icon: Eye,
+              tone: "bg-violet-50 text-violet-700",
+            },
+            {
+              label: segmentContent.metrics[2]?.label ?? "Contatos",
+              value: stats?.totalContacts ?? 0,
+              note: segmentContent.metrics[2]?.helper ?? `${stats?.totalFavorites ?? 0} favoritos`,
+              icon: MessageSquare,
+              tone: "bg-emerald-50 text-emerald-700",
+            },
+            {
+              label: segmentContent.metrics[3]?.label ?? "Booster",
+              value: stats?.activeBoosters ?? 0,
+              note: segmentContent.metrics[3]?.helper ?? `${stats?.boostedListings ?? 0} turbinado(s)`,
+              icon: Zap,
+              tone: "bg-amber-50 text-amber-700",
+            },
           ].map(item => {
             const Icon = item.icon;
             return (
@@ -251,6 +289,59 @@ export default function AdvertiserDashboard() {
               </article>
             );
           })}
+        </section>
+
+        <section className="mt-6 grid gap-4 xl:grid-cols-[1.1fr_0.9fr_0.9fr]">
+          <article className="rounded-[28px] bg-gradient-to-r from-slate-900 to-slate-700 p-6 text-white shadow-xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-white/90">
+                  {segmentContent.badge}
+                </div>
+                <h2 className="font-display text-2xl font-black">
+                  {segmentContent.title}
+                </h2>
+                <p className="mt-2 text-sm text-slate-200">
+                  {segmentContent.description}
+                </p>
+              </div>
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-white/10">
+                <SegmentIcon className="h-7 w-7 text-white" />
+              </div>
+            </div>
+            <div className="mt-5 space-y-3">
+              {segmentContent.highlights.map(item => (
+                <div
+                  key={item}
+                  className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium backdrop-blur-sm"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+            {primaryCategory && (
+              <p className="mt-4 text-xs text-slate-300">
+                Segmento principal detectado: {primaryCategory.name}
+              </p>
+            )}
+          </article>
+
+          {segmentContent.modules.map(module => (
+            <article
+              key={module.title}
+              className="rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm"
+            >
+              <div className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${module.accent}`}>
+                Modulo sugerido
+              </div>
+              <h3 className="mt-4 font-display text-xl font-bold text-gray-900">
+                {module.title}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-gray-600">
+                {module.description}
+              </p>
+            </article>
+          ))}
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
@@ -379,33 +470,6 @@ export default function AdvertiserDashboard() {
           </div>
 
           <div className="space-y-6">
-            <section className="rounded-[28px] bg-gradient-to-r from-slate-900 to-slate-700 p-6 text-white shadow-xl">
-              <div className="mb-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-white/90">
-                {segmentContent.badge}
-              </div>
-              <h2 className="font-display text-2xl font-black">
-                {segmentContent.title}
-              </h2>
-              <p className="mt-2 text-sm text-slate-200">
-                {segmentContent.description}
-              </p>
-              <div className="mt-5 space-y-3">
-                {segmentContent.highlights.map(item => (
-                  <div
-                    key={item}
-                    className="rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium backdrop-blur-sm"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-              {primaryCategory && (
-                <p className="mt-4 text-xs text-slate-300">
-                  Segmento principal detectado: {primaryCategory.name}
-                </p>
-              )}
-            </section>
-
             <section className="rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
