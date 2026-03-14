@@ -289,7 +289,7 @@ export default function Home() {
                 "Negocio local";
               const storefrontHref = item.seller?.id
                 ? `/loja/${item.seller.id}`
-                : `/anuncio/${item.id}`;
+                : null;
               const whatsappHref = item.whatsapp
                 ? `https://wa.me/55${item.whatsapp.replace(/\D/g, "")}`
                 : null;
@@ -299,13 +299,31 @@ export default function Home() {
                   key={item.id}
                   className="overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-sm"
                 >
-                  <Link href={storefrontHref} className="block">
+                  {storefrontHref ? (
+                    <Link href={storefrontHref} className="block">
+                      <div className="relative h-36 overflow-hidden bg-gray-100">
+                        {cover ? (
+                          <img
+                            src={cover}
+                            alt={displayName}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
+                            <span className="font-display text-3xl font-black text-blue-700">
+                              {displayName.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  ) : (
                     <div className="relative h-36 overflow-hidden bg-gray-100">
                       {cover ? (
                         <img
                           src={cover}
                           alt={displayName}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                          className="h-full w-full object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
@@ -315,7 +333,7 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                  </Link>
+                  )}
 
                   <div className="relative px-5 pb-5">
                     <div className="-mt-7 flex justify-center">
@@ -347,14 +365,16 @@ export default function Home() {
                     </div>
 
                     <div className="mt-4 flex items-center justify-center gap-2">
-                      <Link href={storefrontHref}>
-                        <Button
-                          size="sm"
-                          className="rounded-xl bg-brand-gradient text-white hover:opacity-90"
-                        >
-                          Ver vitrine
-                        </Button>
-                      </Link>
+                      {storefrontHref && (
+                        <Link href={storefrontHref}>
+                          <Button
+                            size="sm"
+                            className="rounded-xl bg-brand-gradient text-white hover:opacity-90"
+                          >
+                            Ver vitrine
+                          </Button>
+                        </Link>
+                      )}
                       {whatsappHref && (
                         <a
                           href={whatsappHref}

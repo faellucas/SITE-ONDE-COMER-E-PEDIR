@@ -33,65 +33,24 @@ export default function StorefrontPage() {
   );
   const { data: categories } = trpc.public.categories.useQuery();
   const { data: cities } = trpc.public.cities.useQuery();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className="container py-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-64 rounded-[28px] bg-gray-200" />
-            <div className="h-10 w-1/2 rounded bg-gray-200" />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="h-56 rounded-2xl bg-gray-200" />
-              ))}
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!data?.seller) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className="container py-20 text-center">
-          <Store className="mx-auto h-12 w-12 text-gray-300" />
-          <h1 className="mt-4 font-display text-2xl font-bold text-gray-900">
-            Vitrine nao encontrada
-          </h1>
-          <p className="mt-2 text-gray-500">
-            Essa loja ainda nao tem uma vitrine publica disponivel.
-          </p>
-          <Link href="/busca">
-            <Button className="mt-6 rounded-2xl bg-brand-gradient text-white">
-              Voltar para a busca
-            </Button>
-          </Link>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const { seller, listings } = data;
-  const displayName =
-    seller.personType === "pj"
+  const seller = data?.seller ?? null;
+  const listings = data?.listings ?? [];
+  const displayName = seller
+    ? seller.personType === "pj"
       ? seller.companyName || seller.name || "Loja"
-      : seller.name || "Anunciante";
+      : seller.name || "Anunciante"
+    : "Loja";
   const sellerInitial = displayName.charAt(0).toUpperCase();
   const coverImage =
-    seller.bannerUrl ||
+    seller?.bannerUrl ||
     listings.flatMap(item => item.images ?? []).find(image => image.isPrimary)
       ?.url ||
     listings.flatMap(item => item.images ?? [])[0]?.url ||
     null;
   const cityName =
-    cities?.find(city => city.id === seller.cityId)?.name || "Norte Pioneiro";
-  const whatsappHref = seller.whatsapp
+    (seller && cities?.find(city => city.id === seller.cityId)?.name) ||
+    "Norte Pioneiro";
+  const whatsappHref = seller?.whatsapp
     ? `https://wa.me/55${seller.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
         `Ola! Vi sua vitrine no Norte Vivo e quero saber mais sobre seus produtos.`
       )}`
@@ -138,6 +97,51 @@ export default function StorefrontPage() {
     });
   }, [activeCategory, listings, sortBy]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="container py-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-64 rounded-[28px] bg-gray-200" />
+            <div className="h-10 w-1/2 rounded bg-gray-200" />
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="h-56 rounded-2xl bg-gray-200" />
+              ))}
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!data?.seller) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="container py-20 text-center">
+          <Store className="mx-auto h-12 w-12 text-gray-300" />
+          <h1 className="mt-4 font-display text-2xl font-bold text-gray-900">
+            Vitrine nao encontrada
+          </h1>
+          <p className="mt-2 text-gray-500">
+            Essa loja ainda nao tem uma vitrine publica disponivel.
+          </p>
+          <Link href="/busca">
+            <Button className="mt-6 rounded-2xl bg-brand-gradient text-white">
+              Voltar para a busca
+            </Button>
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const storefrontSeller = seller!;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -168,9 +172,9 @@ export default function StorefrontPage() {
             <div className="-mt-14 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="flex items-end gap-4">
                 <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-[28px] border-4 border-white bg-white text-3xl font-black text-blue-700 shadow-lg">
-                  {seller.avatar ? (
+                  {storefrontSeller.avatar ? (
                     <img
-                      src={seller.avatar}
+                      src={storefrontSeller.avatar}
                       alt={displayName}
                       className="h-full w-full object-cover"
                     />
@@ -183,7 +187,7 @@ export default function StorefrontPage() {
                     <h1 className="font-display text-2xl font-black text-gray-900 sm:text-3xl">
                       {displayName}
                     </h1>
-                    {seller.isVerified && (
+                    {storefrontSeller.isVerified && (
                       <BadgeCheck className="h-5 w-5 text-blue-500" />
                     )}
                   </div>
@@ -229,7 +233,7 @@ export default function StorefrontPage() {
                   Sobre a loja
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                  {seller.bio?.trim() ||
+                  {storefrontSeller.bio?.trim() ||
                     "Esta loja faz parte do portal Norte Vivo e usa esta vitrine para mostrar seus produtos, servicos e oportunidades da regiao."}
                 </p>
               </div>
@@ -239,7 +243,10 @@ export default function StorefrontPage() {
                 </p>
                 <div className="mt-3 space-y-2 text-sm text-gray-700">
                   <p>{listings.length} item(ns) publicado(s)</p>
-                  <p>Membro desde {new Date(seller.createdAt).getFullYear()}</p>
+                  <p>
+                    Membro desde{" "}
+                    {new Date(storefrontSeller.createdAt).getFullYear()}
+                  </p>
                   <p>Perfil publico da loja ativo</p>
                 </div>
               </div>
