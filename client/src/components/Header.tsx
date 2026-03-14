@@ -19,8 +19,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  MapPin, Search, Bell, Plus, User, LogOut, LayoutDashboard,
-  Shield, Heart, Menu, X, ChevronDown, Zap, Settings
+  MapPin,
+  Search,
+  Bell,
+  Plus,
+  User,
+  LogOut,
+  LayoutDashboard,
+  Shield,
+  Heart,
+  Menu,
+  X,
+  ChevronDown,
+  Zap,
+  Settings,
 } from "lucide-react";
 
 interface HeaderProps {
@@ -29,13 +41,19 @@ interface HeaderProps {
   onSearch?: (q: string) => void;
 }
 
-export default function Header({ selectedCity, onCityChange, onSearch }: HeaderProps) {
+export default function Header({
+  selectedCity,
+  onCityChange,
+  onSearch,
+}: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
   const [searchQ, setSearchQ] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const displayName =
-    user?.personType === "pj" ? user?.companyName || user?.name || "Loja" : user?.name || "Usuário";
+    user?.personType === "pj"
+      ? user?.companyName || user?.name || "Loja"
+      : user?.name || "Usuário";
   const displayInitial = displayName.charAt(0)?.toUpperCase() || "U";
 
   const { data: cities } = trpc.public.cities.useQuery();
@@ -50,7 +68,8 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
     <header className="sticky top-0 z-50 max-w-full overflow-x-clip border-b border-gray-100 bg-white shadow-md">
       {/* Top bar */}
       <div className="bg-brand-gradient px-4 py-1.5 text-center text-[11px] font-medium text-white sm:text-xs">
-        🚀 Anuncie grátis por 30 dias no Norte Vivo — O marketplace do Norte Pioneiro do Paraná!
+        🚀 Encontre lojas, serviços, produtos e negócios perto de você no portal
+        local do Norte Pioneiro!
       </div>
 
       {/* Main header */}
@@ -62,8 +81,15 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
               <Zap className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="font-display font-black text-xl text-gray-900">Norte</span>
-              <span className="font-display font-black text-xl" style={{ color: "oklch(0.68 0.19 45)" }}>Vivo</span>
+              <span className="font-display font-black text-xl text-gray-900">
+                Norte
+              </span>
+              <span
+                className="font-display font-black text-xl"
+                style={{ color: "oklch(0.68 0.19 45)" }}
+              >
+                Vivo
+              </span>
             </div>
           </Link>
 
@@ -72,7 +98,9 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
             <MapPin className="w-4 h-4 text-blue-600" />
             <Select
               value={selectedCity ? String(selectedCity) : "all"}
-              onValueChange={(v) => onCityChange?.(v === "all" ? null : Number(v))}
+              onValueChange={v =>
+                onCityChange?.(v === "all" ? null : Number(v))
+              }
             >
               <SelectTrigger className="border-0 shadow-none p-0 h-auto text-sm font-medium text-gray-700 focus:ring-0 w-[140px]">
                 <SelectValue placeholder="Todas as cidades" />
@@ -80,7 +108,9 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
               <SelectContent>
                 <SelectItem value="all">Todas as cidades</SelectItem>
                 {cities?.map(c => (
-                  <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+                  <SelectItem key={c.id} value={String(c.id)}>
+                    {c.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -94,7 +124,7 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
                 type="text"
                 value={searchQ}
                 onChange={e => setSearchQ(e.target.value)}
-                placeholder="Buscar produtos, serviços, imóveis..."
+                placeholder="Buscar lojas, produtos, serviços, imóveis..."
                 className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-20 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 sm:pr-24"
               />
               <button
@@ -119,16 +149,27 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
             {isAuthenticated ? (
               <>
                 <Link href="/favoritos">
-                  <Button variant="ghost" size="icon" className="text-gray-600 hover:text-red-500">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-600 hover:text-red-500"
+                  >
                     <Heart className="w-5 h-5" />
                   </Button>
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center gap-2 px-2">
+                    <Button
+                      variant="ghost"
+                      className="flex items-center gap-2 px-2"
+                    >
                       <div className="w-8 h-8 rounded-full bg-brand-gradient flex items-center justify-center overflow-hidden text-white text-sm font-bold">
                         {user?.avatar ? (
-                          <img src={user.avatar} alt={displayName} className="w-full h-full object-cover" />
+                          <img
+                            src={user.avatar}
+                            alt={displayName}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           displayInitial
                         )}
@@ -138,14 +179,18 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <div className="px-3 py-2">
-                      <p className="font-semibold text-sm text-gray-900">{displayName}</p>
+                      <p className="font-semibold text-sm text-gray-900">
+                        {displayName}
+                      </p>
                       <p className="text-xs text-gray-500">{user?.email}</p>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate("/anunciante")}>
                       <LayoutDashboard className="w-4 h-4 mr-2" /> Meu Painel
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/anunciante/meus-dados")}>
+                    <DropdownMenuItem
+                      onClick={() => navigate("/anunciante/meus-dados")}
+                    >
                       <Settings className="w-4 h-4 mr-2" /> Meus dados
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate("/favoritos")}>
@@ -157,7 +202,10 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => logout()} className="text-red-600">
+                    <DropdownMenuItem
+                      onClick={() => logout()}
+                      className="text-red-600"
+                    >
                       <LogOut className="w-4 h-4 mr-2" /> Sair
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -165,7 +213,10 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
               </>
             ) : (
               <Link href={LOGIN_ROUTE}>
-                <Button variant="outline" className="rounded-xl border-blue-200 text-blue-700 hover:bg-blue-50 font-semibold hidden sm:flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  className="rounded-xl border-blue-200 text-blue-700 hover:bg-blue-50 font-semibold hidden sm:flex items-center gap-1.5"
+                >
                   <User className="w-4 h-4" />
                   Entrar
                 </Button>
@@ -179,7 +230,11 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
               className="sm:hidden"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -192,7 +247,9 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
             <MapPin className="w-4 h-4 text-blue-600" />
             <Select
               value={selectedCity ? String(selectedCity) : "all"}
-              onValueChange={(v) => onCityChange?.(v === "all" ? null : Number(v))}
+              onValueChange={v =>
+                onCityChange?.(v === "all" ? null : Number(v))
+              }
             >
               <SelectTrigger className="flex-1 rounded-xl">
                 <SelectValue placeholder="Selecionar cidade" />
@@ -200,7 +257,9 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
               <SelectContent>
                 <SelectItem value="all">Todas as cidades</SelectItem>
                 {cities?.map(c => (
-                  <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+                  <SelectItem key={c.id} value={String(c.id)}>
+                    {c.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -31,7 +31,8 @@ export default function Footer() {
             Comece a anunciar agora: é grátis
           </h2>
           <p className="mx-auto mb-6 max-w-xl text-blue-100">
-            Teste o Norte Vivo, publique seus anúncios e alcance a região com um fluxo simples.
+            Teste o Norte Vivo, publique seus anúncios e alcance a região com um
+            fluxo simples.
           </p>
           <Link href="/anunciar">
             <button className="rounded-xl bg-white px-8 py-3 font-bold text-blue-700 shadow-lg transition-colors hover:bg-blue-50">
@@ -54,7 +55,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="mb-4 text-sm leading-relaxed text-gray-400">
-              O marketplace regional do Norte Pioneiro do Paraná. Compre, venda, anuncie e conecte-se com negócios locais.
+              O portal local do Norte Pioneiro do Paraná para encontrar lojas,
+              serviços, produtos e oportunidades da região em um só lugar.
             </p>
             <div className="flex items-center gap-1 text-sm text-gray-400">
               <MapPin className="h-4 w-4 text-blue-400" />
@@ -63,11 +65,16 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-4 font-display font-bold text-white">Categorias</h4>
+            <h4 className="mb-4 font-display font-bold text-white">
+              Categorias
+            </h4>
             <ul className="space-y-2 text-sm">
               {footerCategories.map(cat => (
                 <li key={cat.slug}>
-                  <Link href={`/categoria/${cat.slug}`} className="transition-colors hover:text-white">
+                  <Link
+                    href={`/categoria/${cat.slug}`}
+                    className="transition-colors hover:text-white"
+                  >
                     {cat.label}
                   </Link>
                 </li>
@@ -80,7 +87,10 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {footerCities.map(city => (
                 <li key={city.slug}>
-                  <Link href={`/cidade/${city.slug}`} className="transition-colors hover:text-white">
+                  <Link
+                    href={`/cidade/${city.slug}`}
+                    className="transition-colors hover:text-white"
+                  >
                     {city.label}
                   </Link>
                 </li>
@@ -89,23 +99,76 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-4 font-display font-bold text-white">Norte Vivo</h4>
+            <h4 className="mb-4 font-display font-bold text-white">
+              Norte Vivo
+            </h4>
             <ul className="mb-6 space-y-2 text-sm">
-              <li><Link href="/planos" className="transition-colors hover:text-white">Planos e preços</Link></li>
-              <li><Link href="/como-funciona" className="transition-colors hover:text-white">Como funciona</Link></li>
-              <li><Link href="/entrar" className="transition-colors hover:text-white">Entrar ou cadastrar</Link></li>
-              <li><Link href="/anunciante" className="transition-colors hover:text-white">Painel do anunciante</Link></li>
-              <li><Link href="/termos" className="transition-colors hover:text-white">Termos de uso</Link></li>
-              <li><Link href="/privacidade" className="transition-colors hover:text-white">Privacidade</Link></li>
+              <li>
+                <Link
+                  href="/planos"
+                  className="transition-colors hover:text-white"
+                >
+                  Planos e preços
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/como-funciona"
+                  className="transition-colors hover:text-white"
+                >
+                  Como funciona
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/entrar"
+                  className="transition-colors hover:text-white"
+                >
+                  Entrar ou cadastrar
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/anunciante"
+                  className="transition-colors hover:text-white"
+                >
+                  Painel do anunciante
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/termos"
+                  className="transition-colors hover:text-white"
+                >
+                  Termos de uso
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacidade"
+                  className="transition-colors hover:text-white"
+                >
+                  Privacidade
+                </Link>
+              </li>
             </ul>
             <div className="flex gap-3">
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-blue-600">
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-blue-600"
+              >
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-pink-600">
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-pink-600"
+              >
                 <Instagram className="h-4 w-4" />
               </a>
-              <a href="#" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-green-600">
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-800 transition-colors hover:bg-green-600"
+              >
                 <MessageCircle className="h-4 w-4" />
               </a>
             </div>
@@ -113,7 +176,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-gray-800 pt-6 text-xs text-gray-500 md:flex-row">
-          <p>© {new Date().getFullYear()} Norte Vivo. Todos os direitos reservados.</p>
+          <p>
+            © {new Date().getFullYear()} Norte Vivo. Todos os direitos
+            reservados.
+          </p>
           <p>Feito para o Norte Pioneiro do Paraná.</p>
         </div>
       </div>

@@ -15,35 +15,79 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import {
-  Utensils, ShoppingBag, ShoppingCart, Shirt, Home as HomeIcon, Hammer, Car, Building2, Briefcase, HardHat, Heart, PawPrint, Tractor, Smartphone, Users, Calendar,
-  Tag, Wrench, Cross, Zap, ArrowRight, Star, TrendingUp, Shield, CheckCircle,
-  ChevronRight, MapPin, BadgeCheck, BarChart3
+  Utensils,
+  ShoppingBag,
+  ShoppingCart,
+  Shirt,
+  Home as HomeIcon,
+  Hammer,
+  Car,
+  Building2,
+  Briefcase,
+  HardHat,
+  Heart,
+  PawPrint,
+  Tractor,
+  Smartphone,
+  Users,
+  Calendar,
+  Tag,
+  Wrench,
+  Cross,
+  Zap,
+  ArrowRight,
+  Star,
+  TrendingUp,
+  Shield,
+  CheckCircle,
+  ChevronRight,
+  MapPin,
+  BadgeCheck,
+  BarChart3,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Utensils, ShoppingBag, ShoppingCart, Shirt, HomeIcon, Hammer, Car, Building2, Briefcase, HardHat, Heart, PawPrint, Tractor, Smartphone, Users, Calendar,
-  Tag, Wrench, Cross, Zap,
+  Utensils,
+  ShoppingBag,
+  ShoppingCart,
+  Shirt,
+  HomeIcon,
+  Hammer,
+  Car,
+  Building2,
+  Briefcase,
+  HardHat,
+  Heart,
+  PawPrint,
+  Tractor,
+  Smartphone,
+  Users,
+  Calendar,
+  Tag,
+  Wrench,
+  Cross,
+  Zap,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "delivery": "bg-orange-50 text-orange-600 hover:bg-orange-100",
-  "mercados": "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
-  "farmacia": "bg-blue-50 text-blue-600 hover:bg-blue-100",
+  delivery: "bg-orange-50 text-orange-600 hover:bg-orange-100",
+  mercados: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
+  farmacia: "bg-blue-50 text-blue-600 hover:bg-blue-100",
   "moda-acessorios": "bg-pink-50 text-pink-600 hover:bg-pink-100",
   "casa-moveis": "bg-purple-50 text-purple-600 hover:bg-purple-100",
-  "construcao": "bg-amber-50 text-amber-600 hover:bg-amber-100",
-  "autopecas": "bg-gray-50 text-gray-600 hover:bg-gray-100",
-  "veiculos": "bg-blue-50 text-blue-700 hover:bg-blue-100",
-  "imoveis": "bg-teal-50 text-teal-600 hover:bg-teal-100",
+  construcao: "bg-amber-50 text-amber-600 hover:bg-amber-100",
+  autopecas: "bg-gray-50 text-gray-600 hover:bg-gray-100",
+  veiculos: "bg-blue-50 text-blue-700 hover:bg-blue-100",
+  imoveis: "bg-teal-50 text-teal-600 hover:bg-teal-100",
   "servicos-gerais": "bg-violet-50 text-violet-600 hover:bg-violet-100",
   "mao-de-obra": "bg-yellow-50 text-yellow-700 hover:bg-yellow-100",
   "saude-beleza": "bg-rose-50 text-rose-600 hover:bg-rose-100",
-  "pets": "bg-green-50 text-green-600 hover:bg-green-100",
+  pets: "bg-green-50 text-green-600 hover:bg-green-100",
   "agro-rural": "bg-lime-50 text-lime-700 hover:bg-lime-100",
-  "eletronicos": "bg-cyan-50 text-cyan-600 hover:bg-cyan-100",
-  "empregos": "bg-indigo-50 text-indigo-600 hover:bg-indigo-100",
-  "eventos": "bg-fuchsia-50 text-fuchsia-600 hover:bg-fuchsia-100",
-  "classificados": "bg-slate-50 text-slate-600 hover:bg-slate-100",
+  eletronicos: "bg-cyan-50 text-cyan-600 hover:bg-cyan-100",
+  empregos: "bg-indigo-50 text-indigo-600 hover:bg-indigo-100",
+  eventos: "bg-fuchsia-50 text-fuchsia-600 hover:bg-fuchsia-100",
+  classificados: "bg-slate-50 text-slate-600 hover:bg-slate-100",
 };
 
 export default function Home() {
@@ -53,18 +97,31 @@ export default function Home() {
   const [categoryCarouselApi, setCategoryCarouselApi] = useState<CarouselApi>();
 
   const { data: categories } = trpc.public.categories.useQuery();
-  const { data: topCategories } = trpc.public.topCategories.useQuery({ limit: 10 });
+  const { data: topCategories } = trpc.public.topCategories.useQuery({
+    limit: 10,
+  });
   const { data: cities } = trpc.public.cities.useQuery();
-  const { data: featured } = trpc.public.featuredListings.useQuery({ limit: 8, cityId: selectedCity ?? undefined });
-  const { data: recent } = trpc.public.recentListings.useQuery({ limit: 16, cityId: selectedCity ?? undefined });
-  const { data: deliveryListings } = trpc.public.listingsByCategory.useQuery({ categorySlug: "delivery", limit: 6 });
+  const { data: featured } = trpc.public.featuredListings.useQuery({
+    limit: 8,
+    cityId: selectedCity ?? undefined,
+  });
+  const { data: recent } = trpc.public.recentListings.useQuery({
+    limit: 16,
+    cityId: selectedCity ?? undefined,
+  });
+  const { data: deliveryListings } = trpc.public.listingsByCategory.useQuery({
+    categorySlug: "delivery",
+    limit: 6,
+  });
 
   const handleSearch = (q: string) => {
     navigate(`/busca?q=${encodeURIComponent(q)}&city=${selectedCity || ""}`);
   };
 
   const cityName = cities?.find(c => c.id === selectedCity)?.name;
-  const featuredCategories = topCategories?.length ? topCategories : categories?.slice(0, 10);
+  const featuredCategories = topCategories?.length
+    ? topCategories
+    : categories?.slice(0, 10);
 
   useEffect(() => {
     if (!categoryCarouselApi || !featuredCategories?.length) return;
@@ -83,27 +140,75 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header selectedCity={selectedCity} onCityChange={setSelectedCity} onSearch={handleSearch} />
+      <Header
+        selectedCity={selectedCity}
+        onCityChange={setSelectedCity}
+        onSearch={handleSearch}
+      />
+      <section className="container pt-8 pb-4">
+        <div className="rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
+          <div className="max-w-3xl">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              <MapPin className="h-4 w-4" />
+              Portal local do Norte Pioneiro
+            </div>
+            <h1 className="font-display text-3xl font-black text-gray-900 sm:text-4xl">
+              Um lugar para encontrar tudo perto de voce
+            </h1>
+            <p className="mt-3 max-w-2xl text-gray-500">
+              Descubra lojas, servicos, produtos, oportunidades e anuncios da
+              sua regiao. No Norte Vivo, cada negocio pode ter seu perfil, sua
+              vitrine e seus produtos em um portal pensado para ser encontrado.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm text-gray-600">
+              <span className="rounded-full bg-gray-100 px-3 py-1.5 font-medium">
+                Guia local
+              </span>
+              <span className="rounded-full bg-gray-100 px-3 py-1.5 font-medium">
+                Compra e venda
+              </span>
+              <span className="rounded-full bg-gray-100 px-3 py-1.5 font-medium">
+                Vitrine digital
+              </span>
+              <span className="rounded-full bg-gray-100 px-3 py-1.5 font-medium">
+                Perfil da loja
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="container py-12">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="section-heading">Cashback em Categorias Selecionadas</h2>
+            <h2 className="section-heading">
+              Categorias que movimentam o portal
+            </h2>
             <p className="text-sm text-gray-500">
-              Programa de fidelizacao pensado para categorias com compra recorrente.
+              Beneficios e incentivos para atrair clientes nas categorias com
+              mais recorrencia na regiao.
             </p>
           </div>
-          <Link href="/como-funciona" className="text-sm font-medium text-emerald-600 hover:underline">
+          <Link
+            href="/como-funciona"
+            className="text-sm font-medium text-emerald-600 hover:underline"
+          >
             Como funciona
           </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {CASHBACK_RULES.slice(0, 4).map(rule => (
-            <article key={rule.slug} className="rounded-[24px] border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
+            <article
+              key={rule.slug}
+              className="rounded-[24px] border border-emerald-100 bg-emerald-50 p-5 shadow-sm"
+            >
               <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-black text-emerald-700">
                 ate {rule.rate}% de cashback
               </div>
-              <h3 className="font-display text-xl font-bold text-gray-900">{rule.label}</h3>
+              <h3 className="font-display text-xl font-bold text-gray-900">
+                {rule.label}
+              </h3>
               <p className="mt-2 text-sm text-gray-600">{rule.description}</p>
             </article>
           ))}
@@ -118,24 +223,38 @@ export default function Home() {
               <div className="w-8 h-8 bg-orange-500 rounded-xl flex items-center justify-center">
                 <ShoppingBag className="w-4 h-4 text-white" />
               </div>
-              <h2 className="section-heading">Delivery & Pedidos</h2>
+              <h2 className="section-heading">
+                Delivery, pedidos e vitrines ativas
+              </h2>
             </div>
-            <Link href="/categoria/delivery" className="text-sm text-orange-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
+            <Link
+              href="/categoria/delivery"
+              className="text-sm text-orange-600 font-medium flex items-center gap-1 hover:gap-2 transition-all"
+            >
               Ver todos <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           {deliveryListings && deliveryListings.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {deliveryListings.map(listing => (
-                <ListingCard key={listing.id} {...listing} cityName={cities?.find(c => c.id === listing.cityId)?.name} />
+                <ListingCard
+                  key={listing.id}
+                  {...listing}
+                  cityName={cities?.find(c => c.id === listing.cityId)?.name}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-12 bg-white rounded-2xl">
               <ShoppingBag className="w-12 h-12 text-orange-200 mx-auto mb-3" />
-              <p className="text-gray-500 mb-4">Nenhum delivery cadastrado ainda. Seja o primeiro!</p>
+              <p className="text-gray-500 mb-4">
+                Nenhuma loja desta categoria apareceu ainda. Seja a primeira
+                vitrine ativa daqui!
+              </p>
               <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
-                <Button className="bg-orange-500 text-white rounded-xl hover:bg-orange-600">Anunciar Grátis</Button>
+                <Button className="bg-orange-500 text-white rounded-xl hover:bg-orange-600">
+                  Anunciar Grátis
+                </Button>
               </Link>
             </div>
           )}
@@ -150,11 +269,16 @@ export default function Home() {
               <TrendingUp className="w-4 h-4 text-white" />
             </div>
             <h2 className="section-heading">
-              Anúncios Recentes
-              {cityName && <span className="text-blue-600 ml-2">— {cityName}</span>}
+              Produtos, servicos e oportunidades
+              {cityName && (
+                <span className="text-blue-600 ml-2">— {cityName}</span>
+              )}
             </h2>
           </div>
-          <Link href="/busca" className="text-sm text-blue-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
+          <Link
+            href="/busca"
+            className="text-sm text-blue-600 font-medium flex items-center gap-1 hover:gap-2 transition-all"
+          >
             Ver todos <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -165,7 +289,9 @@ export default function Home() {
                 key={listing.id}
                 {...listing}
                 cityName={cities?.find(c => c.id === listing.cityId)?.name}
-                categoryName={categories?.find(c => c.id === listing.categoryId)?.name}
+                categoryName={
+                  categories?.find(c => c.id === listing.categoryId)?.name
+                }
               />
             ))}
           </div>
@@ -174,8 +300,12 @@ export default function Home() {
             <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Zap className="w-8 h-8 text-blue-400" />
             </div>
-            <h3 className="font-display font-bold text-gray-700 text-lg mb-2">Nenhum anúncio ainda</h3>
-            <p className="text-gray-500 mb-6">Seja o primeiro a anunciar no Norte Vivo!</p>
+            <h3 className="font-display font-bold text-gray-700 text-lg mb-2">
+              Nada publicado ainda
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Seja a primeira loja ou anunciante a aparecer no portal!
+            </p>
             <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
               <Button className="bg-brand-gradient text-white rounded-xl px-8">
                 <Zap className="w-4 h-4 mr-2" /> Anunciar Grátis
@@ -188,8 +318,13 @@ export default function Home() {
       {/* ─── CITIES ───────────────────────────────────────────────────────── */}
       <section className="bg-white py-10 border-y border-gray-100">
         <div className="container">
-          <h2 className="section-heading text-center mb-2">Cidades Atendidas</h2>
-          <p className="text-gray-500 text-center mb-8">Presente em toda a região do Norte Pioneiro do Paraná</p>
+          <h2 className="section-heading text-center mb-2">
+            Cidades e negocios da regiao
+          </h2>
+          <p className="text-gray-500 text-center mb-8">
+            Um portal local pensado para conectar moradores, clientes e empresas
+            do Norte Pioneiro do Parana
+          </p>
           <div className="flex flex-wrap justify-center gap-3">
             {cities?.map(city => (
               <Link key={city.id} href={`/cidade/${city.slug}`}>
@@ -205,22 +340,51 @@ export default function Home() {
 
       {/* ─── HOW IT WORKS ─────────────────────────────────────────────────── */}
       <section className="container py-14">
-        <h2 className="section-heading text-center mb-2">Como Funciona</h2>
-        <p className="text-gray-500 text-center mb-10">Simples, rápido e gratuito para começar</p>
+        <h2 className="section-heading text-center mb-2">
+          Como sua loja entra para o portal
+        </h2>
+        <p className="text-gray-500 text-center mb-10">
+          Sem mudar sua rotina: voce cria presenca, exibe seus produtos e comeca
+          a ser encontrado
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { step: "01", icon: Users, title: "Crie sua conta", desc: "Cadastre-se gratuitamente em menos de 1 minuto. Pessoa física ou jurídica.", color: "bg-blue-500" },
-            { step: "02", icon: Zap, title: "Publique seu anúncio", desc: "Adicione fotos, descrição e preço. Seu anúncio fica ativo por 30 dias grátis.", color: "bg-orange-500" },
-            { step: "03", icon: TrendingUp, title: "Turbine com Booster", desc: "Destaque seu anúncio e receba muito mais contatos e visualizações.", color: "bg-green-500" },
+            {
+              step: "01",
+              icon: Users,
+              title: "Crie sua conta",
+              desc: "Cadastre sua empresa ou seu perfil em poucos minutos para fazer parte do portal local.",
+              color: "bg-blue-500",
+            },
+            {
+              step: "02",
+              icon: Zap,
+              title: "Monte sua vitrine",
+              desc: "Publique produtos, servicos, fotos, descricao e informacoes para sua loja ser encontrada.",
+              color: "bg-orange-500",
+            },
+            {
+              step: "03",
+              icon: TrendingUp,
+              title: "Ganhe visibilidade",
+              desc: "Apareca para quem busca no site e fortaleça sua presenca regional com mais alcance.",
+              color: "bg-green-500",
+            },
           ].map(item => {
             const IconComp = item.icon;
             return (
               <div key={item.step} className="text-center">
-                <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                <div
+                  className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}
+                >
                   <IconComp className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-xs font-bold text-gray-400 mb-2">PASSO {item.step}</div>
-                <h3 className="font-display font-bold text-lg text-gray-900 mb-2">{item.title}</h3>
+                <div className="text-xs font-bold text-gray-400 mb-2">
+                  PASSO {item.step}
+                </div>
+                <h3 className="font-display font-bold text-lg text-gray-900 mb-2">
+                  {item.title}
+                </h3>
                 <p className="text-gray-500 text-sm">{item.desc}</p>
               </div>
             );
@@ -231,38 +395,94 @@ export default function Home() {
       {/* ─── PLANS PREVIEW ────────────────────────────────────────────────── */}
       <section className="bg-gray-900 py-14">
         <div className="container">
-          <h2 className="font-display text-3xl font-black text-white text-center mb-2">Planos e Preços</h2>
-          <p className="text-gray-400 text-center mb-10">Comece grátis, cresça com o Norte Vivo</p>
+          <h2 className="font-display text-3xl font-black text-white text-center mb-2">
+            Planos e presença digital
+          </h2>
+          <p className="text-gray-400 text-center mb-10">
+            Comece gratis, apareca no portal e cresca sua vitrine com mais
+            destaque
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              { name: "Gratis", price: "R$ 0", period: "30 dias", features: ["5 anuncios", "3 fotos por anuncio", "Suporte basico"], color: "border-gray-600", badge: null },
-              { name: "Profissional", price: "R$ 99,90", period: "/ano", features: ["15 anuncios", "8 fotos por anuncio", "12 boosters de 24h/ano", "Suporte prioritario"], color: "border-blue-500", badge: "LANCAMENTO" },
-              { name: "Premium", price: "R$ 129,90", period: "/ano", features: ["Anuncios ilimitados", "20 fotos por anuncio", "24 boosters de 24h/ano", "Acumula e usa quando quiser"], color: "border-amber-400", badge: "MELHOR" },
+              {
+                name: "Gratis",
+                price: "R$ 0",
+                period: "30 dias",
+                features: [
+                  "5 anuncios",
+                  "3 fotos por anuncio",
+                  "Suporte basico",
+                ],
+                color: "border-gray-600",
+                badge: null,
+              },
+              {
+                name: "Profissional",
+                price: "R$ 99,90",
+                period: "/ano",
+                features: [
+                  "15 anuncios",
+                  "8 fotos por anuncio",
+                  "12 boosters de 24h/ano",
+                  "Suporte prioritario",
+                ],
+                color: "border-blue-500",
+                badge: "LANCAMENTO",
+              },
+              {
+                name: "Premium",
+                price: "R$ 129,90",
+                period: "/ano",
+                features: [
+                  "Anuncios ilimitados",
+                  "20 fotos por anuncio",
+                  "24 boosters de 24h/ano",
+                  "Acumula e usa quando quiser",
+                ],
+                color: "border-amber-400",
+                badge: "MELHOR",
+              },
             ].map(plan => (
-              <div key={plan.name} className={`bg-gray-800 rounded-2xl p-6 border-2 ${plan.color} relative`}>
+              <div
+                key={plan.name}
+                className={`bg-gray-800 rounded-2xl p-6 border-2 ${plan.color} relative`}
+              >
                 {plan.badge && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className={`text-xs font-black px-3 py-1 rounded-full ${plan.badge === "POPULAR" ? "bg-blue-500 text-white" : "bg-amber-400 text-gray-900"}`}>
+                    <span
+                      className={`text-xs font-black px-3 py-1 rounded-full ${plan.badge === "POPULAR" ? "bg-blue-500 text-white" : "bg-amber-400 text-gray-900"}`}
+                    >
                       {plan.badge}
                     </span>
                   </div>
                 )}
-                <h3 className="font-display font-bold text-white text-xl mb-1">{plan.name}</h3>
+                <h3 className="font-display font-bold text-white text-xl mb-1">
+                  {plan.name}
+                </h3>
                 <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-3xl font-black text-white">{plan.price}</span>
+                  <span className="text-3xl font-black text-white">
+                    {plan.price}
+                  </span>
                   <span className="text-gray-400 text-sm">{plan.period}</span>
                 </div>
                 <ul className="space-y-2 mb-6">
                   {plan.features.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-gray-300">
+                    <li
+                      key={f}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
                       <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <Link href="/planos">
-                  <Button className={`w-full rounded-xl font-bold ${plan.badge === "MELHOR" ? "bg-amber-400 text-gray-900 hover:bg-amber-300" : plan.badge === "POPULAR" ? "bg-blue-500 text-white hover:bg-blue-400" : "bg-gray-700 text-white hover:bg-gray-600"}`}>
-                    {plan.name === "Grátis" ? "Começar Grátis" : "Assinar Agora"}
+                  <Button
+                    className={`w-full rounded-xl font-bold ${plan.badge === "MELHOR" ? "bg-amber-400 text-gray-900 hover:bg-amber-300" : plan.badge === "POPULAR" ? "bg-blue-500 text-white hover:bg-blue-400" : "bg-gray-700 text-white hover:bg-gray-600"}`}
+                  >
+                    {plan.name === "Grátis"
+                      ? "Começar Grátis"
+                      : "Assinar Agora"}
                   </Button>
                 </Link>
               </div>
@@ -284,10 +504,11 @@ export default function Home() {
               <Zap className="w-8 h-8 text-white" />
             </div>
             <h2 className="font-display text-3xl md:text-4xl font-black mb-3">
-              Turbine seu anúncio com o Booster!
+              Turbine sua vitrine com o Booster!
             </h2>
             <p className="text-orange-100 text-lg mb-6 max-w-xl mx-auto">
-              Apareça no topo das buscas, ganhe destaque na home e receba até 10x mais contatos. A partir de R$ 9,90.
+              Apareca no topo das buscas, ganhe destaque dentro do portal e
+              aumente as chances de novos contatos e vendas.
             </p>
             <Link href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE}>
               <Button className="bg-white text-orange-600 font-black px-10 py-4 text-lg rounded-2xl hover:bg-orange-50 shadow-xl">
@@ -304,10 +525,26 @@ export default function Home() {
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: Shield, title: "100% Seguro", desc: "Plataforma verificada e confiável" },
-              { icon: Zap, title: "Rápido e Fácil", desc: "Anuncie em menos de 5 minutos" },
-              { icon: MapPin, title: "Regional", desc: "Foco no Norte Pioneiro do PR" },
-              { icon: BadgeCheck, title: "Verificado", desc: "Anunciantes com selo de confiança" },
+              {
+                icon: Shield,
+                title: "Portal confiavel",
+                desc: "Um ambiente pensado para reunir negocios reais da regiao",
+              },
+              {
+                icon: Zap,
+                title: "Vitrine rapida",
+                desc: "Sua loja ou anuncio pode entrar no ar em poucos minutos",
+              },
+              {
+                icon: MapPin,
+                title: "Presenca regional",
+                desc: "Foco total em quem compra, vende e procura por perto",
+              },
+              {
+                icon: BadgeCheck,
+                title: "Mais descoberta",
+                desc: "Produtos, perfis e servicos organizados para serem encontrados",
+              },
             ].map(item => {
               const IconComp = item.icon;
               return (
@@ -329,25 +566,40 @@ export default function Home() {
       {/* Mobile bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl md:hidden z-40">
         <div className="flex items-center justify-around py-2">
-          <Link href="/" className="flex flex-col items-center gap-0.5 text-blue-600 px-3 py-1">
+          <Link
+            href="/"
+            className="flex flex-col items-center gap-0.5 text-blue-600 px-3 py-1"
+          >
             <Zap className="w-5 h-5" />
             <span className="text-xs font-medium">Início</span>
           </Link>
-          <Link href="/busca" className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1">
+          <Link
+            href="/busca"
+            className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1"
+          >
             <Tag className="w-5 h-5" />
             <span className="text-xs">Buscar</span>
           </Link>
-          <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE} className="flex flex-col items-center gap-0.5 px-3 py-1">
+          <Link
+            href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}
+            className="flex flex-col items-center gap-0.5 px-3 py-1"
+          >
             <div className="w-12 h-12 bg-orange-gradient rounded-2xl flex items-center justify-center -mt-5 shadow-lg">
               <Zap className="w-6 h-6 text-white" />
             </div>
             <span className="text-xs text-orange-500 font-bold">Anunciar</span>
           </Link>
-          <Link href="/favoritos" className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1">
+          <Link
+            href="/favoritos"
+            className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1"
+          >
             <Heart className="w-5 h-5" />
             <span className="text-xs">Favoritos</span>
           </Link>
-          <Link href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE} className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1">
+          <Link
+            href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE}
+            className="flex flex-col items-center gap-0.5 text-gray-500 px-3 py-1"
+          >
             <Users className="w-5 h-5" />
             <span className="text-xs">Perfil</span>
           </Link>
@@ -357,4 +609,3 @@ export default function Home() {
     </div>
   );
 }
-
