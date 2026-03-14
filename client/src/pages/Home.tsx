@@ -125,25 +125,25 @@ export default function Home() {
   const quickLinks = [
     {
       label: "Guia local",
-      description: "Descubra negocios e servicos da regiao",
+      description: "Ache o que precisa perto de voce",
       href: "/busca",
       icon: MapPin,
     },
     {
       label: "Compra e venda",
-      description: "Anuncie produtos e comece a vender",
+      description: "Entre e anuncie em poucos minutos",
       href: isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE,
       icon: ShoppingCart,
     },
     {
       label: "Vitrine digital",
-      description: "Veja vitrines e ofertas publicadas",
+      description: "Descubra ofertas e negocios em destaque",
       href: "/busca?q=lojas",
       icon: ShoppingBag,
     },
     {
       label: "Perfil da loja",
-      description: "Encontre perfis comerciais e contatos",
+      description: "Conheca lojas, contatos e informacoes",
       href: "/busca?q=perfil%20de%20loja",
       icon: Building2,
     },
@@ -172,21 +172,21 @@ export default function Home() {
         onSearch={handleSearch}
       />
       <section className="container pt-8 pb-4">
-        <div className="rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
-          <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+        <div className="overflow-hidden rounded-[28px] bg-brand-gradient p-6 text-white shadow-sm sm:p-8">
+          <div className="mx-auto max-w-5xl text-center">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white">
               <MapPin className="h-4 w-4" />
               Portal local do Norte Pioneiro
             </div>
-            <h1 className="font-display text-3xl font-black text-gray-900 sm:text-4xl">
+            <h1 className="font-display text-3xl font-black text-white sm:text-4xl">
               Um lugar para encontrar tudo perto de voce
             </h1>
-            <p className="mt-3 max-w-2xl text-gray-500">
+            <p className="mx-auto mt-3 max-w-3xl text-blue-50/90">
               Descubra lojas, servicos, produtos, oportunidades e anuncios da
-              sua regiao. No Norte Vivo, cada negocio pode ter seu perfil, sua
-              vitrine e seus produtos em um portal pensado para ser encontrado.
+              sua regiao. Aqui cada negocio pode ter perfil, vitrine e mais
+              chances de ser encontrado.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:max-w-4xl">
+            <div className="mx-auto mt-6 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {quickLinks.map(item => {
                 const Icon = item.icon;
 
@@ -194,22 +194,21 @@ export default function Home() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="group rounded-[22px] border border-gray-100 bg-gray-50 px-4 py-3 transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-sm"
+                    className="group rounded-[22px] bg-orange-gradient px-4 py-4 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:opacity-95"
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm transition-colors group-hover:bg-blue-50">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20 text-white shadow-sm">
                         <Icon className="h-4 w-4" />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="font-semibold text-gray-900">
-                            {item.label}
-                          </p>
-                          <ArrowRight className="h-4 w-4 shrink-0 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-blue-600" />
-                        </div>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {item.description}
-                        </p>
+                      <p className="mt-3 font-semibold text-white">
+                        {item.label}
+                      </p>
+                      <p className="mt-1 text-sm text-orange-50/90">
+                        {item.description}
+                      </p>
+                      <div className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-white">
+                        Acessar
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </div>
                     </div>
                   </Link>
