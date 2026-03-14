@@ -757,17 +757,28 @@ export default function Home() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
-                "Perfil publico da loja",
-                "Vitrine com produtos e banner",
-                "Contato rapido por WhatsApp",
-                "Mais descoberta nas buscas locais",
+                {
+                  label: "Perfil publico da loja",
+                  href: isAuthenticated ? "/anunciante/meus-dados" : LOGIN_ROUTE,
+                },
+                {
+                  label: "Vitrine com produtos e banner",
+                  href: isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE,
+                },
+                {
+                  label: "Contato rapido por WhatsApp",
+                  href: isAuthenticated ? "/anunciante/meus-dados" : LOGIN_ROUTE,
+                },
+                {
+                  label: "Mais descoberta nas buscas locais",
+                  href: "/planos",
+                },
               ].map(item => (
-                <div
-                  key={item}
-                  className="rounded-[22px] bg-gray-50 px-4 py-4 text-sm font-semibold text-gray-700"
-                >
-                  {item}
-                </div>
+                <Link key={item.label} href={item.href}>
+                  <div className="rounded-[22px] bg-gray-50 px-4 py-4 text-sm font-semibold text-gray-700 transition-colors hover:bg-orange-50 hover:text-orange-600">
+                    {item.label}
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
