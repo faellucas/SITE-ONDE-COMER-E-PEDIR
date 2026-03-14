@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
+import { getSubcategoryOptionsBySlug } from "@/lib/listingSubcategories";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -17,6 +18,7 @@ export default function SearchPage() {
   const [q, setQ] = useState(params.get("q") || "");
   const [cityId, setCityId] = useState<number | null>(params.get("city") ? Number(params.get("city")) : null);
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [subcategory, setSubcategory] = useState<string>("");
   const [type, setType] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
   const [showFilters, setShowFilters] = useState(false);
@@ -24,10 +26,13 @@ export default function SearchPage() {
 
   const { data: cities } = trpc.public.cities.useQuery();
   const { data: categories } = trpc.public.categories.useQuery();
+  const selectedCategory = categories?.find(c => c.id === categoryId);
+  const subcategoryOptions = getSubcategoryOptionsBySlug(selectedCategory?.slug);
   const { data: results, isLoading } = trpc.public.searchListings.useQuery({
     q: q || undefined,
     cityId: cityId || undefined,
     categoryId: categoryId || undefined,
+    subcategory: subcategory || undefined,
     type: type as any || undefined,
     minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
     maxPrice: priceRange[1] < 50000 ? priceRange[1] : undefined,
@@ -39,6 +44,16 @@ export default function SearchPage() {
     e.preventDefault();
     setPage(1);
   };
+
+  useEffect(() => {
+    if (!subcategoryOptions.length) {
+      setSubcategory("");
+      return;
+    }
+
+    if (subcategoryOptions.includes(subcategory)) return;
+    setSubcategory("");
+  }, [subcategory, subcategoryOptions]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,7 +88,7 @@ export default function SearchPage() {
         {/* Filters panel */}
         {showFilters && (
           <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
               <div>
                 <label className="text-xs font-semibold text-gray-500 mb-2 block">Categoria</label>
                 <Select value={categoryId ? String(categoryId) : "all"} onValueChange={v => setCategoryId(v === "all" ? null : Number(v))}>
@@ -95,6 +110,26 @@ export default function SearchPage() {
                   <SelectContent>
                     <SelectItem value="all">Todas as cidades</SelectItem>
                     {cities?.map(c => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 mb-2 block">Subcategoria</label>
+                <Select
+                  value={subcategory || "all"}
+                  onValueChange={v => setSubcategory(v === "all" ? "" : v)}
+                  disabled={!subcategoryOptions.length}
+                >
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    {subcategoryOptions.map(option => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -134,7 +169,7 @@ export default function SearchPage() {
                 variant="outline"
                 size="sm"
                 className="rounded-xl"
-                onClick={() => { setCategoryId(null); setCityId(null); setType(""); setPriceRange([0, 50000]); setQ(""); }}
+                onClick={() => { setCategoryId(null); setSubcategory(""); setCityId(null); setType(""); setPriceRange([0, 50000]); setQ(""); }}
               >
                 <X className="w-3 h-3 mr-1" /> Limpar filtros
               </Button>
@@ -147,6 +182,7 @@ export default function SearchPage() {
           {q && <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">"{q}" <button onClick={() => setQ("")}><X className="w-3 h-3" /></button></span>}
           {cityId && <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">{cities?.find(c => c.id === cityId)?.name} <button onClick={() => setCityId(null)}><X className="w-3 h-3" /></button></span>}
           {categoryId && <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">{categories?.find(c => c.id === categoryId)?.name} <button onClick={() => setCategoryId(null)}><X className="w-3 h-3" /></button></span>}
+          {subcategory && <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">{subcategory} <button onClick={() => setSubcategory("")}><X className="w-3 h-3" /></button></span>}
         </div>
 
         {/* Results */}
@@ -184,7 +220,7 @@ export default function SearchPage() {
             <Search className="w-16 h-16 text-gray-200 mx-auto mb-4" />
             <h3 className="font-display font-bold text-gray-700 text-xl mb-2">Nenhum resultado encontrado</h3>
             <p className="text-gray-500 mb-6">Tente outros termos ou remova alguns filtros</p>
-            <Button variant="outline" className="rounded-xl" onClick={() => { setQ(""); setCategoryId(null); setCityId(null); setType(""); }}>
+            <Button variant="outline" className="rounded-xl" onClick={() => { setQ(""); setCategoryId(null); setSubcategory(""); setCityId(null); setType(""); }}>
               <X className="w-4 h-4 mr-2" /> Limpar busca
             </Button>
           </div>

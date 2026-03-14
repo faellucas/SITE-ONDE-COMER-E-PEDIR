@@ -424,6 +424,7 @@ export const appRouter = router({
     searchListings: publicProcedure.input(z.object({
       q: z.string().optional(),
       categoryId: z.number().optional(),
+      subcategory: z.string().max(80).optional(),
       cityId: z.number().optional(),
       type: z.enum(["product", "service", "vehicle", "property", "food", "job"]).optional(),
       minPrice: z.number().optional(),
@@ -437,6 +438,7 @@ export const appRouter = router({
           .filter(item => item.status === "active")
           .filter(item => !input.q || item.title.toLowerCase().includes(input.q.toLowerCase()))
           .filter(item => !input.categoryId || item.categoryId === input.categoryId)
+          .filter(item => !input.subcategory || ("subcategory" in item ? item.subcategory === input.subcategory : true))
           .filter(item => !input.cityId || item.cityId === input.cityId)
           .filter(item => !input.type || item.type === input.type)
           .filter(item => !input.minPrice || Number(item.price ?? 0) >= input.minPrice)
@@ -447,6 +449,7 @@ export const appRouter = router({
       const conditions: any[] = [eq(listings.status, "active")];
       if (input.q) conditions.push(like(listings.title, `%${input.q}%`));
       if (input.categoryId) conditions.push(eq(listings.categoryId, input.categoryId));
+      if (input.subcategory) conditions.push(eq(listings.subcategory, input.subcategory));
       if (input.cityId) conditions.push(eq(listings.cityId, input.cityId));
       if (input.type) conditions.push(eq(listings.type, input.type));
       if (input.minPrice) conditions.push(gte(listings.price, String(input.minPrice)));
