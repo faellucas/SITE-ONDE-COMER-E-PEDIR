@@ -15,12 +15,11 @@ const cities = [
 ];
 
 const categories = [
-  { name: "Onde Comer", slug: "onde-comer", icon: "Utensils", color: "#ef4444", sortOrder: 1 },
-  { name: "Delivery", slug: "delivery", icon: "ShoppingBag", color: "#f97316", sortOrder: 2 },
-  { name: "Servicos Gerais", slug: "servicos-gerais", icon: "Wrench", color: "#8b5cf6", sortOrder: 3 },
-  { name: "Veiculos", slug: "veiculos", icon: "Car", color: "#2563eb", sortOrder: 4 },
-  { name: "Imoveis", slug: "imoveis", icon: "HomeIcon", color: "#0f766e", sortOrder: 5 },
-  { name: "Eletronicos", slug: "eletronicos", icon: "Smartphone", color: "#06b6d4", sortOrder: 6 },
+  { name: "Delivery", slug: "delivery", icon: "ShoppingBag", color: "#f97316", sortOrder: 1 },
+  { name: "Servicos Gerais", slug: "servicos-gerais", icon: "Wrench", color: "#8b5cf6", sortOrder: 2 },
+  { name: "Veiculos", slug: "veiculos", icon: "Car", color: "#2563eb", sortOrder: 3 },
+  { name: "Imoveis", slug: "imoveis", icon: "HomeIcon", color: "#0f766e", sortOrder: 4 },
+  { name: "Eletronicos", slug: "eletronicos", icon: "Smartphone", color: "#06b6d4", sortOrder: 5 },
 ];
 
 const plans = [

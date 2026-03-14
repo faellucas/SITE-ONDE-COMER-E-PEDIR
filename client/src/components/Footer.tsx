@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { Facebook, Instagram, MapPin, MessageCircle, Zap } from "lucide-react";
 
 const footerCategories = [
-  { label: "Onde Comer", slug: "onde-comer" },
   { label: "Delivery", slug: "delivery" },
   { label: "Veículos", slug: "veiculos" },
   { label: "Imóveis", slug: "imoveis" },

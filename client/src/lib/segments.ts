@@ -19,7 +19,7 @@ type SegmentMetric = {
 export function getSegmentFromCategorySlug(slug?: string | null): BusinessSegment {
   if (!slug) return "generic";
 
-  if (["onde-comer", "delivery", "restaurantes", "lanchonetes", "pizzarias"].includes(slug)) {
+  if (["delivery", "restaurantes", "lanchonetes", "pizzarias"].includes(slug)) {
     return "food";
   }
 

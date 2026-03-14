@@ -7,12 +7,6 @@ export type CashbackRule = {
 
 export const CASHBACK_RULES: CashbackRule[] = [
   {
-    slug: "onde-comer",
-    label: "Onde Comer",
-    rate: 5,
-    description: "Ideal para recompra rapida e fidelizacao local.",
-  },
-  {
     slug: "delivery",
     label: "Delivery",
     rate: 5,

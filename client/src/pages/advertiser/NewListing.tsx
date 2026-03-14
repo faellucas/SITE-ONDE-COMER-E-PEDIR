@@ -22,8 +22,6 @@ type ListingImageDraft = {
   persisted?: boolean;
 };
 
-const CATEGORY_BLOCKLIST = new Set(["onde-comer"]);
-
 const TYPE_CATEGORY_MATCHERS: Record<string, (slug: string) => boolean> = {
   service: slug => slug === "servicos-gerais",
   vehicle: slug => ["veiculos", "motos", "carros", "autopecas"].includes(slug),
@@ -31,7 +29,7 @@ const TYPE_CATEGORY_MATCHERS: Record<string, (slug: string) => boolean> = {
   food: slug => slug === "delivery",
   job: slug => slug === "empregos",
   product: slug =>
-    !["servicos-gerais", "veiculos", "motos", "carros", "autopecas", "imoveis", "delivery", "onde-comer", "empregos"].includes(slug),
+    !["servicos-gerais", "veiculos", "motos", "carros", "autopecas", "imoveis", "delivery", "empregos"].includes(slug),
 };
 
 function formatCurrencyFromCents(cents: number) {
@@ -105,7 +103,6 @@ export default function NewListing() {
   }, [didHydrateForm, isEditing, listingForEditQuery.data]);
 
   const filteredCategories = (categories ?? []).filter(category => {
-    if (CATEGORY_BLOCKLIST.has(category.slug)) return false;
     const matcher = TYPE_CATEGORY_MATCHERS[type];
     return matcher ? matcher(category.slug) : true;
   });

@@ -26,7 +26,6 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "onde-comer": "bg-red-50 text-red-600 hover:bg-red-100",
   "delivery": "bg-orange-50 text-orange-600 hover:bg-orange-100",
   "mercados": "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
   "farmacia": "bg-blue-50 text-blue-600 hover:bg-blue-100",
@@ -58,7 +57,6 @@ export default function Home() {
   const { data: cities } = trpc.public.cities.useQuery();
   const { data: featured } = trpc.public.featuredListings.useQuery({ limit: 8, cityId: selectedCity ?? undefined });
   const { data: recent } = trpc.public.recentListings.useQuery({ limit: 16, cityId: selectedCity ?? undefined });
-  const { data: foodListings } = trpc.public.listingsByCategory.useQuery({ categorySlug: "onde-comer", limit: 6 });
   const { data: deliveryListings } = trpc.public.listingsByCategory.useQuery({ categorySlug: "delivery", limit: 6 });
 
   const handleSearch = (q: string) => {
@@ -86,178 +84,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header selectedCity={selectedCity} onCityChange={setSelectedCity} onSearch={handleSearch} />
-
-      {/* ─── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="bg-hero-gradient text-white relative overflow-hidden">
-        {/* Decorative circles */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10" style={{ background: "radial-gradient(circle, white, transparent)", transform: "translate(30%, -30%)" }} />
-        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full opacity-10" style={{ background: "radial-gradient(circle, white, transparent)", transform: "translate(-30%, 30%)" }} />
-
-        <div className="container py-16 md:py-24 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium mb-6 border border-white/20">
-              <MapPin className="w-4 h-4" />
-              Norte Pioneiro do Paraná
-            </div>
-            <h1 className="font-display text-4xl md:text-6xl font-black leading-tight mb-4">
-              Compre, venda e anuncie
-              <span className="block" style={{ color: "oklch(0.82 0.18 85)" }}>no Norte Pioneiro</span>
-            </h1>
-            <p className="text-blue-100 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-              O marketplace regional de Ibaiti e toda a região. Produtos, serviços, imóveis, veículos e muito mais — tudo perto de você.
-            </p>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-6 mb-10">
-              {[
-                { label: "Cidades", value: "17+" },
-                { label: "Categorias", value: "19" },
-                { label: "Cadastro", value: "Grátis" },
-              ].map(stat => (
-                <div key={stat.label} className="text-center">
-                  <div className="font-display text-2xl font-black text-white">{stat.value}</div>
-                  <div className="text-blue-200 text-sm">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
-                <Button className="bg-orange-gradient text-white font-bold px-8 py-6 text-lg rounded-2xl shadow-xl hover:opacity-90 transition-opacity">
-                  <Zap className="w-5 h-5 mr-2" />
-                  Anunciar Grátis
-                </Button>
-              </Link>
-              <Link href="/busca">
-                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg rounded-2xl bg-transparent">
-                  Ver Anúncios
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Wave divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 60L60 50C120 40 240 20 360 15C480 10 600 20 720 25C840 30 960 30 1080 25C1200 20 1320 10 1380 5L1440 0V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="#F9FAFB"/>
-          </svg>
-        </div>
-      </section>
-
-      {/* ─── CATEGORIES ───────────────────────────────────────────────────── */}
-      <section className="container py-10">
-        <div className="flex items-center justify-between mb-6">
-          <div className="space-y-1">
-            <h2 className="section-heading">Explorar por Categoria</h2>
-            <p className="text-sm text-gray-500">Slide autom&aacute;tico com as 10 categorias mais visitadas no site.</p>
-          </div>
-          <Link href="/busca" className="text-sm text-blue-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
-            Ver todas <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <Carousel
-          setApi={setCategoryCarouselApi}
-          opts={{
-            align: "start",
-            loop: (featuredCategories?.length ?? 0) > 4,
-            dragFree: true,
-          }}
-          className="relative"
-        >
-          <CarouselContent className="-ml-3">
-            {featuredCategories?.map(cat => {
-            const IconComp = ICON_MAP[cat.icon || "Tag"] || Tag;
-            const colorClass = CATEGORY_COLORS[cat.slug] || "bg-gray-50 text-gray-600 hover:bg-gray-100";
-            return (
-              <CarouselItem key={cat.id} className="pl-3 basis-[78%] xs:basis-[45%] md:basis-[30%] lg:basis-[22%] xl:basis-[18%]">
-                <Link href={`/categoria/${cat.slug}`}>
-                  <div className={`h-full rounded-[22px] border border-white bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl ${colorClass}`}>
-                    <div className="mb-4 flex items-start justify-between">
-                      <div
-                        className="flex h-12 w-12 items-center justify-center rounded-2xl"
-                        style={{ background: cat.color ? `${cat.color}20` : undefined }}
-                      >
-                        <IconComp className="w-6 h-6" />
-                      </div>
-                      <div className="flex items-center gap-1 rounded-full bg-black/5 px-2.5 py-1 text-[11px] font-semibold">
-                        <BarChart3 className="h-3 w-3" />
-                        {cat.viewCount ?? 0}
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-semibold text-sm leading-tight">{cat.name}</div>
-                      <div className="text-xs opacity-75">Mais acessadas agora</div>
-                    </div>
-                  </div>
-                </Link>
-              </CarouselItem>
-            );
-          })}
-          </CarouselContent>
-        </Carousel>
-      </section>
-
-      {/* ─── FEATURED (BOOSTED) ───────────────────────────────────────────── */}
-      {featured && featured.length > 0 && (
-        <section className="container py-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-amber-400 rounded-xl flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <h2 className="section-heading">Anúncios em Destaque</h2>
-            </div>
-            <Link href="/busca?boost=true" className="text-sm text-blue-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
-              Ver todos <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {featured.map(listing => (
-              <ListingCard
-                key={listing.id}
-                {...listing}
-                cityName={cities?.find(c => c.id === listing.cityId)?.name}
-                categoryName={categories?.find(c => c.id === listing.categoryId)?.name}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ─── ONDE COMER ───────────────────────────────────────────────────── */}
-      <section className="bg-red-50 py-10">
-        <div className="container">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-red-500 rounded-xl flex items-center justify-center">
-                <Utensils className="w-4 h-4 text-white" />
-              </div>
-              <h2 className="section-heading">Onde Comer</h2>
-            </div>
-            <Link href="/categoria/onde-comer" className="text-sm text-red-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
-              Ver todos <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          {foodListings && foodListings.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {foodListings.map(listing => (
-                <ListingCard key={listing.id} {...listing} cityName={cities?.find(c => c.id === listing.cityId)?.name} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-2xl">
-              <Utensils className="w-12 h-12 text-red-200 mx-auto mb-3" />
-              <p className="text-gray-500 mb-4">Seja o primeiro a anunciar nesta categoria!</p>
-              <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
-                <Button className="bg-red-500 text-white rounded-xl hover:bg-red-600">Anunciar Grátis</Button>
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
       <section className="container py-12">
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -531,3 +357,4 @@ export default function Home() {
     </div>
   );
 }
+
