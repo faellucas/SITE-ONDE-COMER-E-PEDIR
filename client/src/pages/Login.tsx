@@ -100,7 +100,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="container py-10">
+      <main className="container py-6 sm:py-10">
         <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="hidden rounded-[28px] bg-hero-gradient p-8 text-white shadow-xl lg:block">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">
@@ -124,7 +124,7 @@ export default function LoginPage() {
             </div>
           </section>
 
-          <section className="rounded-[28px] border border-gray-100 bg-white p-8 shadow-sm">
+          <section className="rounded-[28px] border border-gray-100 bg-white p-5 shadow-sm sm:p-8">
             <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient text-white">
               {mode === "login" ? <LogIn className="h-7 w-7" /> : <UserPlus className="h-7 w-7" />}
             </div>

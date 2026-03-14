@@ -47,15 +47,15 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-100">
+    <header className="sticky top-0 z-50 max-w-full overflow-x-clip border-b border-gray-100 bg-white shadow-md">
       {/* Top bar */}
-      <div className="bg-brand-gradient text-white py-1.5 px-4 text-center text-xs font-medium">
+      <div className="bg-brand-gradient px-4 py-1.5 text-center text-[11px] font-medium text-white sm:text-xs">
         🚀 Anuncie grátis por 30 dias no Norte Vivo — O marketplace do Norte Pioneiro do Paraná!
       </div>
 
       {/* Main header */}
       <div className="container">
-        <div className="flex items-center gap-3 py-3">
+        <div className="flex items-center gap-2 py-3 sm:gap-3">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="w-9 h-9 bg-brand-gradient rounded-xl flex items-center justify-center shadow-md">
@@ -87,7 +87,7 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
           </div>
 
           {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+          <form onSubmit={handleSearch} className="min-w-0 max-w-2xl flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
@@ -95,11 +95,11 @@ export default function Header({ selectedCity, onCityChange, onSearch }: HeaderP
                 value={searchQ}
                 onChange={e => setSearchQ(e.target.value)}
                 placeholder="Buscar produtos, serviços, imóveis..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-20 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 sm:pr-24"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-gradient text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-brand-gradient px-2.5 py-1.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-90 sm:px-3 sm:text-xs"
               >
                 Buscar
               </button>

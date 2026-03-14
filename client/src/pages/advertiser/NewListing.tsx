@@ -279,8 +279,8 @@ export default function NewListing() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="container py-6 max-w-2xl">
-        <Link href="/anunciante" className="flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors">
+      <div className="container max-w-2xl py-4 sm:py-6">
+        <Link href="/anunciante" className="mb-6 flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-blue-600">
           <ArrowLeft className="w-4 h-4" /> Voltar ao painel
         </Link>
 
@@ -291,7 +291,7 @@ export default function NewListing() {
         )}
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="bg-hero-gradient p-6 text-white">
+          <div className="bg-hero-gradient p-4 text-white sm:p-6">
             <h1 className="font-display text-2xl font-bold mb-1">
               {isFoodListing
                 ? isEditing
@@ -310,7 +310,7 @@ export default function NewListing() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 p-4 sm:p-6">
             <div className="space-y-4">
               <h2 className="font-bold text-gray-900 flex items-center gap-2">
                 <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-black">1</span>
@@ -353,7 +353,7 @@ export default function NewListing() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Tipo *</label>
                   <Select value={type} onValueChange={setType}>
@@ -448,7 +448,7 @@ export default function NewListing() {
                 Preco
               </h2>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Tipo de preco</label>
                   <Select value={priceType} onValueChange={setPriceType}>
@@ -488,7 +488,7 @@ export default function NewListing() {
                 Localizacao
               </h2>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Cidade</label>
                   <Select value={cityId} onValueChange={setCityId}>
@@ -535,7 +535,7 @@ export default function NewListing() {
                 Fotos (opcional)
               </h2>
 
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {images.map((img, index) => (
                   <div key={`${img.url}-${index}`} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
                     <img src={img.url} alt="" className="w-full h-full object-cover" />

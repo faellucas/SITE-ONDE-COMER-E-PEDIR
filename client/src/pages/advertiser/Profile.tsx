@@ -119,13 +119,13 @@ export default function AdvertiserProfile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="container max-w-4xl py-6">
+      <main className="container max-w-4xl py-4 sm:py-6">
         <Link href="/anunciante" className="mb-6 flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors">
           <ArrowLeft className="h-4 w-4" />
           Voltar ao painel
         </Link>
 
-        <section className="rounded-[28px] bg-white p-8 shadow-sm">
+        <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
           <div className="mb-6 flex flex-col gap-4 border-b border-gray-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
@@ -143,7 +143,7 @@ export default function AdvertiserProfile() {
             </div>
           </div>
 
-          <div className="mb-6 flex flex-col gap-4 rounded-[24px] bg-gray-50 p-5 sm:flex-row sm:items-center">
+          <div className="mb-6 flex flex-col gap-4 rounded-[24px] bg-gray-50 p-4 sm:flex-row sm:items-center sm:p-5">
             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl bg-brand-gradient text-3xl font-black text-white">
               {user?.avatar ? (
                 <img src={user.avatar} alt={displayName || "Perfil"} className="h-full w-full object-cover" />
@@ -160,7 +160,7 @@ export default function AdvertiserProfile() {
                 Ao tocar no botao abaixo, voce escolhe uma imagem da galeria ou biblioteca do aparelho.
               </p>
             </div>
-            <label className="cursor-pointer">
+            <label className="w-full cursor-pointer sm:w-auto">
               <input
                 type="file"
                 accept="image/*"
@@ -170,7 +170,7 @@ export default function AdvertiserProfile() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-2xl"
+                className="w-full rounded-2xl sm:w-auto"
                 disabled={avatarUploading || uploadAvatarMutation.isPending}
               >
                 <Camera className="mr-2 h-4 w-4" />

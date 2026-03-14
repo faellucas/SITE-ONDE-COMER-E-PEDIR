@@ -194,8 +194,8 @@ export default function ListingDetailPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="container py-6">
-        <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
+      <div className="container py-4 sm:py-6">
+        <div className="mb-4 flex items-center gap-2 overflow-hidden text-sm text-gray-500 sm:mb-6">
           <Link href="/" className="hover:text-blue-600">
             Inicio
           </Link>
@@ -204,10 +204,10 @@ export default function ListingDetailPage() {
             Anuncios
           </Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="truncate font-medium text-gray-900">
-            {listing.title}
-          </span>
-        </div>
+            <span className="truncate font-medium text-gray-900">
+              {listing.title}
+            </span>
+          </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
@@ -289,9 +289,9 @@ export default function ListingDetailPage() {
               )}
             </div>
 
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div className="flex-1">
+            <div className="rounded-2xl bg-white p-4 shadow-sm sm:p-6">
+              <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 flex-1">
                   {(listing.type || listingSubcategory || listingCondition) && (
                     <div className="mb-2 flex flex-wrap gap-2">
                       {listing.type && (
@@ -321,17 +321,17 @@ export default function ListingDetailPage() {
                       )}
                     </div>
                   )}
-                  <h1 className="mb-2 font-display text-2xl font-bold text-gray-900">
+                  <h1 className="mb-2 break-words font-display text-2xl font-bold text-gray-900">
                     {listing.title}
                   </h1>
                   <div
-                    className="text-3xl font-black"
+                    className="break-words text-2xl font-black sm:text-3xl"
                     style={{ color: "oklch(0.48 0.22 255)" }}
                   >
                     {formatPrice()}
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex shrink-0 gap-2 self-start">
                   <button
                     onClick={() => {
                       if (isAuthenticated) {
@@ -378,7 +378,7 @@ export default function ListingDetailPage() {
               {listing.description && (
                 <div>
                   <h3 className="mb-2 font-bold text-gray-900">Descricao</h3>
-                  <p className="whitespace-pre-wrap leading-relaxed text-gray-600">
+                  <p className="whitespace-pre-wrap break-words leading-relaxed text-gray-600">
                     {listing.description}
                   </p>
                 </div>
@@ -387,7 +387,7 @@ export default function ListingDetailPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="sticky top-24 rounded-2xl bg-white p-6 shadow-sm">
+            <div className="rounded-2xl bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-24">
               {listing.seller && (
                 <div className="mb-6 flex items-center gap-3 border-b border-gray-100 pb-6">
                   <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-brand-gradient text-xl font-black text-white">
@@ -401,9 +401,9 @@ export default function ListingDetailPage() {
                       sellerInitial
                     )}
                   </div>
-                  <div className="flex-1">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1">
-                      <span className="font-bold text-gray-900">
+                      <span className="truncate font-bold text-gray-900">
                         {sellerDisplayName}
                       </span>
                       {listing.seller.isVerified && (
@@ -494,7 +494,7 @@ export default function ListingDetailPage() {
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
                   {sellerListings.map(item => (
                     <ListingCard key={item.id} {...item} />
                   ))}
@@ -514,7 +514,7 @@ export default function ListingDetailPage() {
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
                   {relatedListings.map(item => (
                     <ListingCard key={item.id} {...item} />
                   ))}

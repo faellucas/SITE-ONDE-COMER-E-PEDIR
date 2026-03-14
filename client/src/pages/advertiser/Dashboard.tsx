@@ -137,15 +137,15 @@ export default function AdvertiserDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="container py-6">
-        <section className="rounded-[28px] bg-white p-8 shadow-sm">
+      <main className="container py-4 sm:py-6">
+        <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
                 <LayoutDashboard className="h-4 w-4" />
                 {segmentContent.quickLabel}
               </div>
-              <h1 className="font-display text-3xl font-black text-gray-900">
+              <h1 className="font-display text-2xl font-black text-gray-900 sm:text-3xl">
                 {segmentContent.dashboardTitle}
               </h1>
               <p className="mt-2 max-w-2xl text-gray-500">
@@ -153,21 +153,21 @@ export default function AdvertiserDashboard() {
                 {segmentContent.dashboardSubtitle}
               </p>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/anunciar">
-                <Button className="rounded-2xl bg-orange-gradient px-6 py-6 font-bold text-white hover:opacity-90">
+                <Button className="w-full rounded-2xl bg-orange-gradient px-6 py-6 font-bold text-white hover:opacity-90 sm:w-auto">
                   <Plus className="mr-2 h-5 w-5" />
                   {isFoodSegment ? "Novo item do cardapio" : "Novo anuncio"}
                 </Button>
               </Link>
               <Link href="/anunciante/meus-dados">
-                <Button variant="outline" className="rounded-2xl px-6 py-6 font-semibold">
+                <Button variant="outline" className="w-full rounded-2xl px-6 py-6 font-semibold sm:w-auto">
                   <Settings className="mr-2 h-4 w-4" />
                   Meus dados
                 </Button>
               </Link>
               <Link href="/planos">
-                <Button variant="outline" className="rounded-2xl px-6 py-6 font-semibold">
+                <Button variant="outline" className="w-full rounded-2xl px-6 py-6 font-semibold sm:w-auto">
                   Ver planos
                 </Button>
               </Link>
@@ -209,7 +209,7 @@ export default function AdvertiserDashboard() {
             </div>
             <Button
               size="sm"
-              className="rounded-xl bg-blue-600 text-white hover:bg-blue-700"
+              className="w-full rounded-xl bg-blue-600 text-white hover:bg-blue-700 md:w-auto"
               onClick={() =>
                 boostMutation.mutate({
                   listingId: boostSuggestionListing.id,
@@ -271,7 +271,7 @@ export default function AdvertiserDashboard() {
         </section>
 
         <section className="mt-6">
-          <article className="rounded-[24px] border border-slate-800 bg-slate-900 p-5 text-white shadow-lg">
+          <article className="rounded-[24px] border border-slate-800 bg-slate-900 p-4 text-white shadow-lg sm:p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex items-start gap-3">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10">
@@ -281,14 +281,14 @@ export default function AdvertiserDashboard() {
                   <div className="inline-flex rounded-full bg-white/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-white/80">
                     {segmentContent.badge}
                   </div>
-                  <h2 className="mt-2 font-display text-xl font-black">{segmentContent.title}</h2>
+                  <h2 className="mt-2 font-display text-lg font-black sm:text-xl">{segmentContent.title}</h2>
                   <p className="mt-1 text-sm text-slate-200">{segmentContent.description}</p>
                 </div>
               </div>
 
-              <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[520px]">
+              <div className="grid gap-2 sm:grid-cols-3 lg:w-[520px] lg:max-w-full">
                 {segmentContent.modules.map(module => (
-                  <div key={module.title} className="rounded-2xl bg-white/10 px-4 py-3">
+                  <div key={module.title} className="min-w-0 rounded-2xl bg-white/10 px-4 py-3">
                     <div className="text-sm font-semibold text-white">{module.title}</div>
                     <div className="mt-1 text-xs text-slate-200">{module.description}</div>
                   </div>
@@ -304,8 +304,8 @@ export default function AdvertiserDashboard() {
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="mb-5 flex items-center justify-between">
+          <div className="rounded-[28px] border border-gray-100 bg-white p-4 shadow-sm sm:p-6">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="font-display text-2xl font-bold text-gray-900">
                   {isFoodSegment ? "Itens do cardapio" : "Seus produtos"}
@@ -344,8 +344,9 @@ export default function AdvertiserDashboard() {
                 {listings.map(listing => {
                   const statusCfg = STATUS_CONFIG[listing.status || "pending"] ?? STATUS_CONFIG.pending;
                   return (
-                    <article key={listing.id} className="flex flex-col gap-4 rounded-[22px] border border-gray-100 p-4 lg:flex-row lg:items-center">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-xl font-bold text-gray-400">
+                    <article key={listing.id} className="flex flex-col gap-4 rounded-[22px] border border-gray-100 p-4">
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-xl font-bold text-gray-400">
                         {listing.title.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -380,12 +381,13 @@ export default function AdvertiserDashboard() {
                           )}
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      </div>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                         <Link href={`/anunciante/editar/${listing.id}`}>
                           <Button
                             size="sm"
                             variant="outline"
-                            className="rounded-xl"
+                            className="w-full rounded-xl sm:w-auto"
                           >
                             <Pencil className="mr-1 h-3.5 w-3.5" />
                             Editar
@@ -394,7 +396,7 @@ export default function AdvertiserDashboard() {
                         {!listing.isBoosted && (
                           <Button
                             size="sm"
-                            className="rounded-xl bg-amber-400 text-gray-900 hover:bg-amber-300"
+                            className="w-full rounded-xl bg-amber-400 text-gray-900 hover:bg-amber-300 sm:w-auto"
                             onClick={() => boostMutation.mutate({ listingId: listing.id, type: "featured", durationDays: 7 })}
                             disabled={boostMutation.isPending}
                           >
@@ -405,7 +407,7 @@ export default function AdvertiserDashboard() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="rounded-xl"
+                          className="w-full rounded-xl sm:w-auto"
                           onClick={() => updateMutation.mutate({ id: listing.id, status: listing.status === "active" ? "paused" : "active" })}
                         >
                           {listing.status === "active" ? (
@@ -423,7 +425,7 @@ export default function AdvertiserDashboard() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700"
+                          className="w-full rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 sm:w-auto"
                           onClick={() => {
                             if (deletingId === listing.id) {
                               deleteMutation.mutate({ id: listing.id });
@@ -446,7 +448,7 @@ export default function AdvertiserDashboard() {
           </div>
 
           <div className="space-y-6">
-            <section className="rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm">
+            <section className="rounded-[28px] border border-gray-100 bg-white p-4 shadow-sm sm:p-6">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                   <AlertCircle className="h-5 w-5" />
@@ -517,7 +519,7 @@ export default function AdvertiserDashboard() {
               </div>
             </section>
 
-            <section className="rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm">
+            <section className="rounded-[28px] border border-gray-100 bg-white p-4 shadow-sm sm:p-6">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
                   <Eye className="h-5 w-5" />
@@ -562,7 +564,7 @@ export default function AdvertiserDashboard() {
               </div>
             </section>
 
-            <section className="rounded-[28px] bg-gradient-to-r from-blue-700 to-violet-700 p-6 text-white shadow-xl">
+            <section className="rounded-[28px] bg-gradient-to-r from-blue-700 to-violet-700 p-4 text-white shadow-xl sm:p-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
                   <Star className="h-6 w-6 text-amber-300" />
