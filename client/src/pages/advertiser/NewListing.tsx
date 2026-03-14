@@ -16,6 +16,32 @@ import {
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle, Image, X } from "lucide-react";
 
+type ListingImageDraft = {
+  url: string;
+  file?: File;
+  persisted?: boolean;
+};
+
+function formatCurrencyFromCents(cents: number) {
+  return (cents / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function formatCurrencyInput(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
+  return formatCurrencyFromCents(Number(digits));
+}
+
+function parseCurrencyInput(value: string) {
+  if (!value.trim()) return undefined;
+  const normalized = value.replace(/\./g, "").replace(",", ".");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 export default function NewListing() {
   const { isAuthenticated } = useAuth();
   const utils = trpc.useUtils();
@@ -33,7 +59,7 @@ export default function NewListing() {
   const [cityId, setCityId] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [images, setImages] = useState<{ url: string; file: File }[]>([]);
+  const [images, setImages] = useState<ListingImageDraft[]>([]);
   const [uploading, setUploading] = useState(false);
   const [didHydrateForm, setDidHydrateForm] = useState(false);
 
@@ -50,51 +76,28 @@ export default function NewListing() {
     const listing = listingForEditQuery.data;
     setTitle(listing.title ?? "");
     setDescription(listing.description ?? "");
-    setPrice(listing.price ? String(listing.price) : "");
+    setPrice(listing.price ? formatCurrencyInput(String(listing.price)) : "");
     setPriceType(listing.priceType ?? "fixed");
     setType(listing.type ?? "product");
     setCategoryId(String(listing.categoryId ?? ""));
     setCityId(listing.cityId ? String(listing.cityId) : "");
     setNeighborhood(listing.neighborhood ?? "");
     setWhatsapp(listing.whatsapp ?? "");
+    setImages(
+      (listing.images ?? []).map(image => ({
+        url: image.url,
+        persisted: true,
+      }))
+    );
     setDidHydrateForm(true);
   }, [didHydrateForm, isEditing, listingForEditQuery.data]);
 
-  const createMutation = trpc.advertiser.createListing.useMutation({
-    onSuccess: async data => {
-      toast.success("Anuncio criado com sucesso!");
-      await utils.advertiser.stats.invalidate();
-      navigate("/anunciante");
+  const createMutation = trpc.advertiser.createListing.useMutation();
 
-      if (data.id && images.length > 0) {
-        setUploading(true);
-        for (const img of images) {
-          try {
-            await uploadMutation.mutateAsync({
-              listingId: data.id,
-              base64: img.url,
-              mimeType: img.file.type,
-            });
-          } catch {
-            // Keep going so one failed upload does not block the flow.
-          }
-        }
-        setUploading(false);
-      }
-    },
-    onError: err => toast.error("Erro ao criar anuncio: " + err.message),
-  });
-
-  const updateMutation = trpc.advertiser.updateListing.useMutation({
-    onSuccess: async () => {
-      toast.success("Anuncio atualizado com sucesso!");
-      await utils.advertiser.stats.invalidate();
-      navigate("/anunciante");
-    },
-    onError: err => toast.error("Erro ao atualizar anuncio: " + err.message),
-  });
+  const updateMutation = trpc.advertiser.updateListing.useMutation();
 
   const uploadMutation = trpc.advertiser.uploadImage.useMutation();
+  const addImageMutation = trpc.advertiser.addImage.useMutation();
 
   const handleImageAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -105,6 +108,33 @@ export default function NewListing() {
       };
       reader.readAsDataURL(file);
     });
+  };
+
+  const uploadPendingImages = async (listingId: number) => {
+    const pendingImages = images.filter(image => image.file);
+    if (pendingImages.length === 0) return;
+
+    setUploading(true);
+    try {
+      for (let index = 0; index < pendingImages.length; index += 1) {
+        const image = pendingImages[index];
+        if (!image.file) continue;
+
+        const { url } = await uploadMutation.mutateAsync({
+          listingId,
+          base64: image.url,
+          mimeType: image.file.type,
+        });
+
+        await addImageMutation.mutateAsync({
+          listingId,
+          url,
+          isPrimary: images.findIndex(item => item.url === image.url) === 0,
+        });
+      }
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -121,7 +151,7 @@ export default function NewListing() {
     const payload = {
       title: title.trim(),
       description: description.trim() || undefined,
-      price: price ? Number(price) : undefined,
+      price: parseCurrencyInput(price),
       priceType: priceType as any,
       type: type as any,
       categoryId: Number(categoryId),
@@ -131,14 +161,31 @@ export default function NewListing() {
     };
 
     if (isEditing && editId) {
-      await updateMutation.mutateAsync({
-        id: editId,
-        ...payload,
-      });
+      try {
+        await updateMutation.mutateAsync({
+          id: editId,
+          ...payload,
+        });
+        await uploadPendingImages(editId);
+        await utils.advertiser.stats.invalidate();
+        await listingForEditQuery.refetch();
+        toast.success("Anuncio atualizado com sucesso!");
+        navigate("/anunciante");
+      } catch (error: any) {
+        toast.error("Erro ao atualizar anuncio: " + (error?.message ?? "Tente novamente"));
+      }
       return;
     }
 
-    await createMutation.mutateAsync(payload);
+    try {
+      const data = await createMutation.mutateAsync(payload);
+      await uploadPendingImages(data.id);
+      await utils.advertiser.stats.invalidate();
+      toast.success("Anuncio criado com sucesso!");
+      navigate("/anunciante");
+    } catch (error: any) {
+      toast.error("Erro ao criar anuncio: " + (error?.message ?? "Tente novamente"));
+    }
   };
 
   if (!isAuthenticated) {
@@ -276,12 +323,11 @@ export default function NewListing() {
                   <div>
                     <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Valor (R$)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={price}
-                      onChange={event => setPrice(event.target.value)}
+                      onChange={event => setPrice(formatCurrencyInput(event.target.value))}
                       placeholder="0,00"
-                      min="0"
-                      step="0.01"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white transition-all"
                     />
                   </div>
@@ -336,43 +382,49 @@ export default function NewListing() {
               </div>
             </div>
 
-            {!isEditing && (
-              <div className="space-y-4 pt-4 border-t border-gray-100">
-                <h2 className="font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-black">4</span>
-                  Fotos (opcional)
-                </h2>
+            <div className="space-y-4 pt-4 border-t border-gray-100">
+              <h2 className="font-bold text-gray-900 flex items-center gap-2">
+                <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-black">4</span>
+                Fotos (opcional)
+              </h2>
 
-                <div className="grid grid-cols-4 gap-3">
-                  {images.map((img, index) => (
-                    <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
-                      <img src={img.url} alt="" className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => setImages(prev => prev.filter((_, idx) => idx !== index))}
-                        className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                      {index === 0 && (
-                        <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-md font-medium">
-                          Principal
-                        </span>
-                      )}
-                    </div>
-                  ))}
+              <div className="grid grid-cols-4 gap-3">
+                {images.map((img, index) => (
+                  <div key={`${img.url}-${index}`} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
+                    <img src={img.url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setImages(prev => prev.filter((_, idx) => idx !== index))}
+                      className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                    {index === 0 && (
+                      <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-md font-medium">
+                        Principal
+                      </span>
+                    )}
+                    {img.persisted && (
+                      <span className="absolute left-1 top-1 rounded-md bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                        Salva
+                      </span>
+                    )}
+                  </div>
+                ))}
 
-                  {images.length < 10 && (
-                    <label className="aspect-square rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
-                      <Image className="w-6 h-6 text-gray-400 mb-1" />
-                      <span className="text-xs text-gray-400">Adicionar</span>
-                      <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageAdd} />
-                    </label>
-                  )}
-                </div>
-                <p className="text-xs text-gray-400">Maximo de 10 fotos. A primeira foto sera a capa do anuncio.</p>
+                {images.length < 10 && (
+                  <label className="aspect-square rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all">
+                    <Image className="w-6 h-6 text-gray-400 mb-1" />
+                    <span className="text-xs text-gray-400">Adicionar</span>
+                    <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageAdd} />
+                  </label>
+                )}
               </div>
-            )}
+              <p className="text-xs text-gray-400">
+                Maximo de 10 fotos. A primeira foto sera a capa do anuncio.
+                {isEditing ? " As fotos novas serao enviadas quando voce salvar as alteracoes." : ""}
+              </p>
+            </div>
 
             <div className="pt-4 border-t border-gray-100">
               <Button
