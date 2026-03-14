@@ -45,6 +45,9 @@ import {
   MapPin,
   BadgeCheck,
   BarChart3,
+  Store as StoreIcon,
+  Globe,
+  SearchCheck,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -166,25 +169,25 @@ export default function Home() {
   const quickLinks = [
     {
       label: "Guia local",
-      description: "Ache o que precisa perto de voce",
+      description: "Ache lojas e servicos por perto",
       href: "/busca",
       icon: MapPin,
     },
     {
       label: "Compra e venda",
-      description: "Entre e anuncie em poucos minutos",
+      description: "Anuncie e publique seus produtos",
       href: isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE,
       icon: ShoppingCart,
     },
     {
       label: "Vitrine digital",
-      description: "Descubra ofertas e negocios em destaque",
+      description: "Descubra vitrines e ofertas locais",
       href: "/busca?q=lojas",
       icon: ShoppingBag,
     },
     {
       label: "Perfil da loja",
-      description: "Conheca lojas, contatos e informacoes",
+      description: "Veja contatos e perfis comerciais",
       href: "/busca?q=perfil%20de%20loja",
       icon: Building2,
     },
@@ -235,12 +238,12 @@ export default function Home() {
               Portal local do Norte Pioneiro
             </div>
             <h1 className="font-display text-3xl font-black text-white sm:text-4xl">
-              Um lugar para encontrar tudo perto de voce
+              O portal local para encontrar e ser encontrado
             </h1>
             <p className="mx-auto mt-3 max-w-3xl text-blue-50/90">
-              Descubra lojas, servicos, produtos, oportunidades e anuncios da
-              sua regiao. Aqui cada negocio pode ter perfil, vitrine e mais
-              chances de ser encontrado.
+              Descubra lojas, produtos, servicos e oportunidades da sua
+              regiao. No Norte Vivo, cada negocio pode ter perfil, vitrine
+              publica e mais chances de aparecer para novos clientes.
             </p>
             <div className="mx-auto mt-6 grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {quickLinks.map(item => {
@@ -413,6 +416,46 @@ export default function Home() {
             </Link>
           </div>
         )}
+      </section>
+
+      <section className="container pb-4">
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              icon: SearchCheck,
+              title: "Encontre perto de voce",
+              desc: "Busque lojas, produtos e servicos da regiao em um so lugar.",
+            },
+            {
+              icon: StoreIcon,
+              title: "Cada loja com sua vitrine",
+              desc: "Perfis comerciais com banner, produtos, contato e descoberta local.",
+            },
+            {
+              icon: Globe,
+              title: "Presenca digital regional",
+              desc: "Uma forma simples de sua empresa ser vista no portal e nas buscas.",
+            },
+          ].map(item => {
+            const IconComp = item.icon;
+            return (
+              <article
+                key={item.title}
+                className="rounded-[24px] border border-gray-100 bg-white p-5 shadow-sm"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                  <IconComp className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-xl font-bold text-gray-900">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  {item.desc}
+                </p>
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       <section className="container py-12">
@@ -648,6 +691,41 @@ export default function Home() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      <section className="container pb-14">
+        <div className="rounded-[32px] bg-white p-6 shadow-sm sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <div className="inline-flex rounded-full bg-orange-50 px-3 py-1 text-xs font-black text-orange-600">
+                Para empresas da regiao
+              </div>
+              <h2 className="mt-4 font-display text-3xl font-black text-gray-900">
+                Sua loja precisa estar onde as pessoas procuram
+              </h2>
+              <p className="mt-3 text-gray-600">
+                Crie sua presenca no portal, monte sua vitrine digital e
+                publique produtos, servicos e contatos para ser encontrado por
+                quem busca na sua cidade e na regiao.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                "Perfil publico da loja",
+                "Vitrine com produtos e banner",
+                "Contato rapido por WhatsApp",
+                "Mais chances de descoberta local",
+              ].map(item => (
+                <div
+                  key={item}
+                  className="rounded-[22px] bg-gray-50 px-4 py-4 text-sm font-semibold text-gray-700"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
