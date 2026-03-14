@@ -406,8 +406,8 @@ export default function Home() {
               Categorias que movimentam o portal
             </h2>
             <p className="text-sm text-gray-500">
-              Beneficios e incentivos para atrair clientes nas categorias com
-              mais recorrencia na regiao.
+              Explore os segmentos com mais procura e descubra vitrines que
+              fazem parte da rotina da regiao.
             </p>
           </div>
           <Link
