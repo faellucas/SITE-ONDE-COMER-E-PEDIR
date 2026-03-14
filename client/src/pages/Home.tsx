@@ -418,7 +418,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="hidden gap-4 md:grid md:grid-cols-2 xl:grid-cols-4">
           {CASHBACK_RULES.slice(0, 4).map(rule => (
             <article
               key={rule.slug}
@@ -433,6 +433,28 @@ export default function Home() {
               <p className="mt-2 text-sm text-gray-600">{rule.description}</p>
             </article>
           ))}
+        </div>
+
+        <div className="md:hidden">
+          <Carousel opts={{ align: "start" }}>
+            <CarouselContent className="-ml-2">
+              {CASHBACK_RULES.slice(0, 4).map(rule => (
+                <CarouselItem key={rule.slug} className="basis-[88%] pl-2">
+                  <article className="min-h-[180px] rounded-[24px] border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
+                    <div className="mb-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-black text-emerald-700">
+                      ate {rule.rate}% de cashback
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-gray-900">
+                      {rule.label}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-600">
+                      {rule.description}
+                    </p>
+                  </article>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </section>
 
