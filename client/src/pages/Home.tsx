@@ -383,7 +383,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               { name: "Gratis", price: "R$ 0", period: "30 dias", features: ["5 anuncios", "3 fotos por anuncio", "Suporte basico"], color: "border-gray-600", badge: null },
-              { name: "Profissional", price: "R$ 99,90", period: "/ano", features: ["15 anuncios", "8 fotos por anuncio", "Booster disponivel", "Suporte prioritario"], color: "border-blue-500", badge: "LANCAMENTO" },
+              { name: "Profissional", price: "R$ 99,90", period: "/ano", features: ["15 anuncios", "8 fotos por anuncio", "12 boosters de 24h/ano", "Suporte prioritario"], color: "border-blue-500", badge: "LANCAMENTO" },
               { name: "Premium", price: "R$ 129,90", period: "/ano", features: ["Anuncios ilimitados", "20 fotos por anuncio", "24 boosters de 24h/ano", "Acumula e usa quando quiser"], color: "border-amber-400", badge: "MELHOR" },
             ].map(plan => (
               <div key={plan.name} className={`bg-gray-800 rounded-2xl p-6 border-2 ${plan.color} relative`}>
