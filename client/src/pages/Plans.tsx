@@ -14,6 +14,7 @@ type PlanVariant = {
   period: string;
   note?: string;
   savings?: string;
+  featureOverrides?: string[];
 };
 
 type PlanDefinition = {
@@ -99,13 +100,24 @@ const PLANS: PlanDefinition[] = [
         period: "/ano",
         note: "equivale a R$ 10,83/mes",
         savings: "economize R$ 48,90",
+        featureOverrides: [
+          "Anuncios ilimitados",
+          "20 fotos por anuncio",
+          "Validade de 30 dias por anuncio",
+          "24 boosters de 24h por ano",
+          "Acumula e usa quando quiser",
+          "Destaque garantido na home",
+          "Selo de verificado",
+          "Suporte VIP",
+          "Relatorios avancados",
+        ],
       },
     },
     features: [
       "Anuncios ilimitados",
       "20 fotos por anuncio",
       "Validade de 30 dias por anuncio",
-      "Booster incluso",
+      "2 boosters de 24h por mes",
       "Destaque garantido na home",
       "Selo de verificado",
       "Suporte VIP",
@@ -205,6 +217,7 @@ export default function PlansPage() {
             const variant = plan.variants[billingCycle];
             const badge = plan.badges[billingCycle];
             const isPremium = plan.id === "premium";
+            const visibleFeatures = variant.featureOverrides ?? plan.features;
 
             return (
               <div
@@ -267,7 +280,7 @@ export default function PlansPage() {
                 )}
 
                 <ul className="mb-6 mt-6 space-y-3">
-                  {plan.features.map(feature => (
+                  {visibleFeatures.map(feature => (
                     <li
                       key={feature}
                       className="flex items-start gap-2 text-sm text-gray-700"
