@@ -9,9 +9,9 @@ import { LOGIN_ROUTE } from "./const";
 import "./index.css";
 
 const queryClient = new QueryClient();
-const apiBaseUrl =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, "") ??
-  "";
+const apiBaseUrl = import.meta.env.PROD
+  ? ""
+  : ((import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/+$/, "") ?? "");
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
