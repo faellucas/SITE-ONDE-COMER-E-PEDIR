@@ -40,6 +40,7 @@ function Router() {
       <Route path="/painel" component={AdvertiserDashboard} />
       <Route path="/cliente" component={AdvertiserDashboard} />
       <Route path="/anunciante/novo" component={NewListing} />
+      <Route path="/anunciante/editar/:id" component={NewListing} />
       <Route path="/anunciar" component={NewListing} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/painel-admin" component={AdminDashboard} />

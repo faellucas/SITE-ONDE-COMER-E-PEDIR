@@ -352,6 +352,28 @@ export const appRouter = router({
       if (!db) return [];
       return db.select().from(listings).where(eq(listings.userId, ctx.user.id)).orderBy(desc(listings.createdAt));
     }),
+    listingForEdit: protectedProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const [listing] = await db
+        .select()
+        .from(listings)
+        .where(and(eq(listings.id, input.id), eq(listings.userId, ctx.user.id)))
+        .limit(1);
+
+      if (!listing) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Anuncio nao encontrado." });
+      }
+
+      const images = await db
+        .select()
+        .from(listingImages)
+        .where(eq(listingImages.listingId, listing.id))
+        .orderBy(listingImages.sortOrder);
+
+      return { ...listing, images };
+    }),
     createListing: protectedProcedure.input(z.object({
       title: z.string().min(5).max(200),
       description: z.string().optional(),
@@ -382,6 +404,10 @@ export const appRouter = router({
       description: z.string().optional(),
       price: z.number().optional(),
       priceType: z.enum(["fixed", "negotiable", "free", "on_request"]).optional(),
+      type: z.enum(["product", "service", "vehicle", "property", "food", "job"]).optional(),
+      categoryId: z.number().optional(),
+      cityId: z.number().optional(),
+      neighborhood: z.string().optional(),
       status: z.enum(["active", "paused", "sold"]).optional(),
       whatsapp: z.string().optional(),
     })).mutation(async ({ ctx, input }) => {

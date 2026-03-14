@@ -11,6 +11,7 @@ import {
   AlertCircle,
   ChevronRight,
   Clock3,
+  Pencil,
   Eye,
   Heart,
   LayoutDashboard,
@@ -231,6 +232,16 @@ export default function AdvertiserDashboard() {
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
+                        <Link href={`/anunciante/editar/${listing.id}`}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="rounded-xl"
+                          >
+                            <Pencil className="mr-1 h-3.5 w-3.5" />
+                            Editar
+                          </Button>
+                        </Link>
                         {!listing.isBoosted && (
                           <Button
                             size="sm"
