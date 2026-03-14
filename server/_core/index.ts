@@ -31,6 +31,15 @@ function isAllowedOrigin(origin: string) {
     return true;
   }
 
+  if (ENV.isProduction) {
+    try {
+      const requestUrl = new URL(normalizedOrigin);
+      return requestUrl.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
   try {
     const frontendUrl = ENV.frontendUrl ? new URL(ENV.frontendUrl) : null;
     const requestUrl = new URL(normalizedOrigin);
