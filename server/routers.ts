@@ -190,9 +190,23 @@ async function resolveInsertId(
 export const appRouter = router({
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => {
+    me: publicProcedure.query(async opts => {
       if (!opts.ctx.user) return null;
-      const { passwordHash: _passwordHash, ...safeUser } = opts.ctx.user;
+      const db = await getDb();
+
+      if (!db) {
+        const { passwordHash: _passwordHash, ...safeUser } = opts.ctx.user;
+        return safeUser;
+      }
+
+      const [freshUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.openId, opts.ctx.user.openId))
+        .limit(1);
+
+      const sourceUser = freshUser ?? opts.ctx.user;
+      const { passwordHash: _passwordHash, ...safeUser } = sourceUser;
       return safeUser;
     }),
     register: publicProcedure
@@ -474,7 +488,16 @@ export const appRouter = router({
           })
           .where(eq(users.id, ctx.user.id));
 
-        return { success: true as const, url };
+        const [updatedUser] = await db
+          .select({ avatar: users.avatar })
+          .from(users)
+          .where(eq(users.id, ctx.user.id))
+          .limit(1);
+
+        return {
+          success: true as const,
+          url: updatedUser?.avatar ?? url,
+        };
       }),
     uploadBanner: protectedProcedure
       .input(
@@ -509,7 +532,16 @@ export const appRouter = router({
           })
           .where(eq(users.id, ctx.user.id));
 
-        return { success: true as const, url };
+        const [updatedUser] = await db
+          .select({ bannerUrl: users.bannerUrl })
+          .from(users)
+          .where(eq(users.id, ctx.user.id))
+          .limit(1);
+
+        return {
+          success: true as const,
+          url: updatedUser?.bannerUrl ?? url,
+        };
       }),
   }),
 
