@@ -1,5 +1,6 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { createHash } from "node:crypto";
 import { ENV } from "./_core/env";
 
 type StorageConfig = { baseUrl: string; apiKey: string };
@@ -17,6 +18,87 @@ function toContentBody(data: Buffer | Uint8Array | string) {
     return Buffer.from(data);
   }
   return Buffer.from(data);
+}
+
+function hasCloudinaryConfig() {
+  return Boolean(
+    ENV.cloudinaryCloudName &&
+      ENV.cloudinaryApiKey &&
+      ENV.cloudinaryApiSecret
+  );
+}
+
+function normalizeCloudinaryPublicId(relKey: string) {
+  return normalizeKey(relKey).replace(/\.[^.]+$/, "");
+}
+
+function getCloudinaryFolderPrefix() {
+  return ENV.cloudinaryFolder
+    .trim()
+    .replace(/^\/+|\/+$/g, "");
+}
+
+function buildCloudinaryPublicId(relKey: string) {
+  const baseId = normalizeCloudinaryPublicId(relKey);
+  const folderPrefix = getCloudinaryFolderPrefix();
+  return folderPrefix ? `${folderPrefix}/${baseId}` : baseId;
+}
+
+function signCloudinaryParams(params: Record<string, string>) {
+  const payload = Object.entries(params)
+    .filter(([, value]) => value)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+
+  return createHash("sha1")
+    .update(`${payload}${ENV.cloudinaryApiSecret}`)
+    .digest("hex");
+}
+
+function buildCloudinaryAssetUrl(publicId: string) {
+  return `https://res.cloudinary.com/${ENV.cloudinaryCloudName}/image/upload/${publicId}`;
+}
+
+async function storagePutCloudinary(
+  relKey: string,
+  data: Buffer | Uint8Array | string,
+  contentType = "application/octet-stream"
+): Promise<{ key: string; url: string }> {
+  const key = normalizeKey(relKey);
+  const publicId = buildCloudinaryPublicId(key);
+  const timestamp = Math.floor(Date.now() / 1000).toString();
+  const signature = signCloudinaryParams({
+    public_id: publicId,
+    timestamp,
+  });
+  const uploadUrl = `https://api.cloudinary.com/v1_1/${ENV.cloudinaryCloudName}/image/upload`;
+  const form = new FormData();
+  const fileName = key.split("/").pop() ?? "upload";
+
+  form.append("file", new Blob([toContentBody(data)], { type: contentType }), fileName);
+  form.append("api_key", ENV.cloudinaryApiKey);
+  form.append("timestamp", timestamp);
+  form.append("public_id", publicId);
+  form.append("signature", signature);
+
+  const response = await fetch(uploadUrl, {
+    method: "POST",
+    body: form,
+  });
+
+  if (!response.ok) {
+    const message = await response.text().catch(() => response.statusText);
+    throw new Error(
+      `Cloudinary upload failed (${response.status} ${response.statusText}): ${message}`
+    );
+  }
+
+  const result = (await response.json()) as { secure_url?: string };
+  return {
+    key,
+    url: result.secure_url ?? buildCloudinaryAssetUrl(publicId),
+  };
 }
 
 function hasR2Config() {
@@ -91,7 +173,7 @@ function getStorageConfig(): StorageConfig {
 
   if (!baseUrl || !apiKey) {
     throw new Error(
-      "Storage credentials missing: configure Cloudflare R2 or set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY"
+      "Storage credentials missing: configure Cloudinary, Cloudflare R2, or set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY"
     );
   }
 
@@ -169,6 +251,10 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream"
 ): Promise<{ key: string; url: string }> {
+  if (hasCloudinaryConfig()) {
+    return storagePutCloudinary(relKey, data, contentType);
+  }
+
   if (hasR2Config()) {
     return storagePutR2(relKey, data, contentType);
   }
@@ -180,6 +266,13 @@ export async function storageGet(
   relKey: string
 ): Promise<{ key: string; url: string }> {
   const key = normalizeKey(relKey);
+
+  if (hasCloudinaryConfig()) {
+    return {
+      key,
+      url: buildCloudinaryAssetUrl(buildCloudinaryPublicId(key)),
+    };
+  }
 
   if (hasR2Config()) {
     const publicUrl = getPublicR2Url(key);

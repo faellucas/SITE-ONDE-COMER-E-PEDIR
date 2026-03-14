@@ -15,4 +15,8 @@ export const ENV = {
   r2Bucket: process.env.R2_BUCKET ?? "",
   r2PublicUrl: process.env.R2_PUBLIC_URL ?? "",
   r2Endpoint: process.env.R2_ENDPOINT ?? "",
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME ?? "",
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY ?? "",
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
+  cloudinaryFolder: process.env.CLOUDINARY_FOLDER ?? "",
 };

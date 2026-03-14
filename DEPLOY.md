@@ -18,6 +18,10 @@
 - `R2_BUCKET`
 - `R2_PUBLIC_URL`
 - `R2_ENDPOINT` (optional)
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `CLOUDINARY_FOLDER` (optional)
 - `BUILT_IN_FORGE_API_URL`
 - `BUILT_IN_FORGE_API_KEY`
 - `FRONTEND_URL`
@@ -74,6 +78,14 @@ GET /api/health
 4. Run `pnpm db:seed`.
 5. Deploy Vercel frontend.
 6. Test signup/login, search, category, listing details and new listing flows.
+
+## Cloudinary
+
+1. Create a Cloudinary product environment.
+2. Copy `Cloud name`, `API Key`, and `API Secret`.
+3. Add `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` to Railway.
+4. Optionally add `CLOUDINARY_FOLDER` (for example `norte-vivo`).
+5. Redeploy Railway and test image upload from the advertiser panel.
 
 ## Cloudflare R2
 
