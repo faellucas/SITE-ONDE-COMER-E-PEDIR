@@ -492,8 +492,21 @@ export const appRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const [listing] = await db.select().from(listings).where(and(eq(listings.id, input.listingId), eq(listings.userId, ctx.user.id))).limit(1);
       if (!listing) throw new TRPCError({ code: "FORBIDDEN" });
-      const prices: Record<string, number> = { featured: 19.90, top: 39.90, banner: 79.90 };
-      const price = prices[input.type] || 19.90;
+      const pricesByDuration: Record<number, number> = {
+        1: 9.9,
+        7: 12.9,
+        15: 24.9,
+        30: 49.9,
+      };
+      const pricesByType: Record<string, number> = {
+        featured: 12.9,
+        top: 24.9,
+        banner: 49.9,
+      };
+      const price =
+        pricesByDuration[input.durationDays] ??
+        pricesByType[input.type] ??
+        12.9;
       const startsAt = new Date();
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + input.durationDays);

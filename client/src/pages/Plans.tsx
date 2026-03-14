@@ -138,6 +138,12 @@ const PLANS: PlanDefinition[] = [
 
 const BOOSTERS = [
   {
+    name: "Booster Relampago",
+    price: 9.9,
+    days: 1,
+    desc: "Impulsiona seu anuncio por 24 horas",
+  },
+  {
     name: "Destaque Basico",
     price: 12.9,
     days: 7,
@@ -337,7 +343,7 @@ export default function PlansPage() {
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             {BOOSTERS.map(booster => (
               <div
                 key={booster.name}

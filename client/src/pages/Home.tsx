@@ -434,7 +434,7 @@ export default function Home() {
               Turbine seu anúncio com o Booster!
             </h2>
             <p className="text-orange-100 text-lg mb-6 max-w-xl mx-auto">
-              Apareça no topo das buscas, ganhe destaque na home e receba até 10x mais contatos. A partir de R$ 19,90.
+              Apareça no topo das buscas, ganhe destaque na home e receba até 10x mais contatos. A partir de R$ 9,90.
             </p>
             <Link href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE}>
               <Button className="bg-white text-orange-600 font-black px-10 py-4 text-lg rounded-2xl hover:bg-orange-50 shadow-xl">
