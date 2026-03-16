@@ -28,7 +28,6 @@ import {
   LayoutDashboard,
   LogOut,
   MapPin,
-  Menu,
   Plus,
   Search,
   Settings,
@@ -38,7 +37,6 @@ import {
   Stethoscope,
   User,
   Wrench,
-  X,
   Zap,
 } from "lucide-react";
 
@@ -73,7 +71,6 @@ export default function Header({
   const { user, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
   const [searchQ, setSearchQ] = useState("");
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [animatedQuery, setAnimatedQuery] = useState("");
   const [animatedIndex, setAnimatedIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -324,7 +321,7 @@ export default function Header({
             </button>
           </div>
 
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div className="border-b border-slate-100 pb-2">
             <Select
               value={selectedCity ? String(selectedCity) : "all"}
               onValueChange={value =>
@@ -344,14 +341,6 @@ export default function Header({
                 ))}
               </SelectContent>
             </Select>
-
-            <button
-              type="button"
-              onClick={() => setMobileOpen(current => !current)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-700"
-            >
-              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </button>
           </div>
         </div>
       </div>
@@ -380,29 +369,6 @@ export default function Header({
           </div>
         </div>
       </div>
-
-      {mobileOpen && (
-        <div className="border-t border-slate-100 bg-white px-4 py-4 xl:hidden">
-          <div className="grid grid-cols-2 gap-3">
-            {HEADER_PILLS.map(item => {
-              const Icon = item.icon;
-              const href = item.label === "Favoritos" && !isAuthenticated ? LOGIN_ROUTE : item.href;
-              return (
-                <Link
-                  key={`mobile-${item.label}`}
-                  href={href}
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
-                >
-                  <span className={`inline-flex rounded-full p-2 ${item.tone}`}>
-                    <Icon className="h-4 w-4" />
-                  </span>
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
