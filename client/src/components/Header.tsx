@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { LOGIN_ROUTE } from "@/const";
@@ -74,6 +74,9 @@ export default function Header({
   const [, navigate] = useLocation();
   const [searchQ, setSearchQ] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [animatedQuery, setAnimatedQuery] = useState("");
+  const [animatedIndex, setAnimatedIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const displayName =
     user?.personType === "pj"
@@ -82,12 +85,63 @@ export default function Header({
   const displayInitial = displayName.charAt(0)?.toUpperCase() || "U";
 
   const { data: cities } = trpc.public.cities.useQuery();
+  const { data: categories } = trpc.public.categories.useQuery();
+
+  const searchSuggestions = useMemo(() => {
+    const categorySuggestions = (categories ?? []).map(category => category.name);
+    const fallbackSuggestions = [
+      "carro",
+      "delivery",
+      "imoveis",
+      "saude",
+      "servicos",
+    ];
+
+    return Array.from(new Set([...categorySuggestions, ...fallbackSuggestions])).slice(0, 8);
+  }, [categories]);
+
+  useEffect(() => {
+    if (!searchSuggestions.length) return;
+
+    const currentWord = searchSuggestions[animatedIndex % searchSuggestions.length];
+
+    const timeout = window.setTimeout(
+      () => {
+        if (!isDeleting) {
+          const nextValue = currentWord.slice(0, animatedQuery.length + 1);
+          setAnimatedQuery(nextValue);
+
+          if (nextValue === currentWord) {
+            setIsDeleting(true);
+          }
+          return;
+        }
+
+        const nextValue = currentWord.slice(0, Math.max(animatedQuery.length - 1, 0));
+        setAnimatedQuery(nextValue);
+
+        if (nextValue.length === 0) {
+          setIsDeleting(false);
+          setAnimatedIndex(current => (current + 1) % searchSuggestions.length);
+        }
+      },
+      !isDeleting
+        ? animatedQuery.length === currentWord.length
+          ? 1200
+          : 90
+        : 45
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [animatedIndex, animatedQuery, isDeleting, searchSuggestions]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearch) onSearch(searchQ);
     else navigate(`/busca?q=${encodeURIComponent(searchQ)}`);
   };
+
+  const searchPlaceholder = `Buscar "${animatedQuery || searchSuggestions[0] || "produto"}"`;
 
   return (
     <header className="sticky top-0 z-50 max-w-full overflow-x-clip border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -118,7 +172,7 @@ export default function Header({
                   type="text"
                   value={searchQ}
                   onChange={e => setSearchQ(e.target.value)}
-                  placeholder="Buscar produtos, servicos..."
+                  placeholder={searchPlaceholder}
                   className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-sm text-slate-700 outline-none"
                 />
               </div>
@@ -248,7 +302,7 @@ export default function Header({
                   type="text"
                   value={searchQ}
                   onChange={e => setSearchQ(e.target.value)}
-                  placeholder='Buscar "Carro"'
+                  placeholder={searchPlaceholder}
                   className="h-12 w-full rounded-2xl border border-slate-200 bg-white py-3 pl-4 pr-12 text-sm text-slate-700 outline-none"
                 />
                 <button
