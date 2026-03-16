@@ -228,7 +228,7 @@ export default function Header({
           </div>
         </div>
 
-        <div className="space-y-3 py-3 xl:hidden">
+        <div className="space-y-2 py-3 xl:hidden">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-gradient shadow-md">
@@ -270,7 +270,7 @@ export default function Header({
             </button>
           </div>
 
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <Select
               value={selectedCity ? String(selectedCity) : "all"}
               onValueChange={value =>
@@ -304,7 +304,7 @@ export default function Header({
 
       <div className="border-t border-slate-100 bg-white">
         <div className="container">
-          <div className="overflow-hidden py-3">
+          <div className="overflow-hidden py-2 sm:py-3">
             <div className="flex w-max items-center gap-2 motion-safe:animate-pill-marquee">
               {[...HEADER_PILLS, ...HEADER_PILLS].map((item, index) => {
               const Icon = item.icon;
