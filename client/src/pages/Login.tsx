@@ -12,13 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
-import { CheckCircle, LogIn, Shield, UserPlus, Zap } from "lucide-react";
-
-const BENEFITS = [
-  "Publique seus anuncios em poucos minutos",
-  "Gerencie favoritos, contatos e painel do anunciante",
-  "Acompanhe desempenho e destaque com Booster",
-];
+import { HelpCircle, LogIn, Mail, UserPlus } from "lucide-react";
 
 type Mode = "login" | "register";
 
@@ -84,60 +78,50 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="container py-6 sm:py-10">
-        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <section className="hidden rounded-[28px] bg-hero-gradient p-8 text-white shadow-xl lg:block">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold">
-              <Shield className="h-4 w-4" />
-              Acesso seguro
-            </div>
-            <h1 className="font-display text-4xl font-black leading-tight">
-              Entre no Norte Vivo
-            </h1>
-            <p className="mt-4 max-w-2xl text-blue-100">
-              Use sua conta para anunciar, favoritar, acompanhar resultados e acessar os recursos da plataforma.
-            </p>
+        <div className="mx-auto max-w-md">
+          <section className="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm">
+            <div className="px-5 pb-8 pt-8 sm:px-8">
+              <div className="mx-auto max-w-sm text-center">
+                <h1 className="font-display text-3xl font-black leading-tight text-gray-900">
+                  {mode === "login"
+                    ? "Entre na sua conta e negocie com seguranca!"
+                    : "Crie sua conta e comece a anunciar hoje"}
+                </h1>
+                <p className="mt-3 text-base leading-7 text-gray-500">
+                  {mode === "login"
+                    ? "Acesse e aproveite uma experiencia segura dentro do Norte Vivo."
+                    : "Cadastre-se para publicar anuncios, gerenciar contatos e entrar no painel."}
+                </p>
+              </div>
 
-            <div className="mt-8 space-y-3">
-              {BENEFITS.map(item => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 backdrop-blur-sm">
-                  <CheckCircle className="h-5 w-5 text-emerald-300" />
-                  <span className="text-sm font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+              {mode === "login" && (
+                <>
+                  <div className="mt-8 flex items-center justify-center gap-5">
+                    <button
+                      type="button"
+                      className="flex h-16 w-16 items-center justify-center rounded-full border border-gray-200 bg-white text-2xl font-bold text-gray-700 shadow-sm transition-transform hover:-translate-y-0.5"
+                      aria-label="Entrar com Google em breve"
+                    >
+                      G
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1877F2] text-3xl font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5"
+                      aria-label="Entrar com Facebook em breve"
+                    >
+                      f
+                    </button>
+                  </div>
 
-          <section className="rounded-[28px] border border-gray-100 bg-white p-5 shadow-sm sm:p-8">
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient text-white">
-              {mode === "login" ? <LogIn className="h-7 w-7" /> : <UserPlus className="h-7 w-7" />}
-            </div>
-            <h2 className="font-display text-2xl font-bold text-gray-900">
-              {mode === "login" ? "Login com email" : "Criar conta"}
-            </h2>
-            <p className="mt-2 text-sm text-gray-500">
-              {mode === "login"
-                ? "Entre com seu email e senha para acessar o painel."
-                : "Cadastre sua conta e comece a anunciar no mesmo instante."}
-            </p>
+                  <div className="mt-8 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-gray-200" />
+                    <span className="text-sm font-medium text-gray-400">Ou conecte com</span>
+                    <div className="h-px flex-1 bg-gray-200" />
+                  </div>
+                </>
+              )}
 
-            <div className="mt-6 grid grid-cols-2 gap-2 rounded-2xl bg-gray-100 p-1">
-              <button
-                type="button"
-                onClick={() => setMode("login")}
-                className={`rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${mode === "login" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
-              >
-                Entrar
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("register")}
-                className={`rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${mode === "register" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
-              >
-                Criar conta
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <form onSubmit={handleSubmit} className="mt-8 space-y-4">
               {mode === "register" && (
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
@@ -252,21 +236,38 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full rounded-2xl bg-brand-gradient py-6 text-base font-bold text-white hover:opacity-90"
+                className="w-full rounded-full bg-orange-500 py-6 text-base font-bold text-white hover:bg-orange-600"
                 disabled={isPending}
               >
                 {mode === "login" ? <LogIn className="mr-2 h-5 w-5" /> : <UserPlus className="mr-2 h-5 w-5" />}
-                {isPending ? "Processando..." : mode === "login" ? "Entrar" : "Criar conta"}
+                {isPending ? "Processando..." : mode === "login" ? "Acessar" : "Criar conta"}
               </Button>
-            </form>
+              </form>
 
-            <div className="mt-4">
-              <Link href="/anunciar">
-                <Button variant="outline" className="w-full rounded-2xl py-6 text-base font-semibold">
-                  <Zap className="mr-2 h-5 w-5" />
-                  Quero anunciar
-                </Button>
+              <div className="mt-8 text-center text-sm text-gray-500">
+                {mode === "login" ? "Nao tem uma conta?" : "Ja tem uma conta?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode(mode === "login" ? "register" : "login")}
+                  className="font-semibold text-blue-700 hover:text-blue-800 hover:underline"
+                >
+                  {mode === "login" ? "Cadastre-se" : "Entrar"}
+                </button>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 bg-gray-50 px-5 py-4 text-center sm:px-8">
+              <Link
+                href="/redefinir-senha"
+                className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
+                <HelpCircle className="h-4 w-4" />
+                Preciso de ajuda
               </Link>
+            </div>
+
+            <div className="border-t border-gray-200 px-5 py-4 text-center text-xs leading-5 text-gray-400 sm:px-8">
+              Ao continuar, voce concorda com os Termos de Uso e a Politica de Privacidade do Norte Vivo.
             </div>
           </section>
         </div>
