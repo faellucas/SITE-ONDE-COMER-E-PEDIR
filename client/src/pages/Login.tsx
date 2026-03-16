@@ -33,9 +33,7 @@ export default function LoginPage() {
   const [whatsapp, setWhatsapp] = useState("");
   const [cpfCnpj, setCpfCnpj] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [resetEmail, setResetEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [resetMessage, setResetMessage] = useState("");
 
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: async () => {
@@ -59,15 +57,6 @@ export default function LoginPage() {
 
   const isPending = loginMutation.isPending || registerMutation.isPending;
 
-  const requestResetMutation = trpc.auth.requestPasswordReset.useMutation({
-    onSuccess: result => {
-      setResetMessage(result.message);
-    },
-    onError: error => {
-      setResetMessage(error.message);
-    },
-  });
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
@@ -89,12 +78,6 @@ export default function LoginPage() {
       email,
       password,
     });
-  };
-
-  const handleResetRequest = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setResetMessage("");
-    await requestResetMutation.mutateAsync({ email: resetEmail });
   };
 
   return (
@@ -249,6 +232,16 @@ export default function LoginPage() {
                   minLength={6}
                   required
                 />
+                {mode === "login" && (
+                  <div className="mt-2 text-right">
+                    <Link
+                      href="/redefinir-senha"
+                      className="text-sm font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                    >
+                      Esqueceu a senha?
+                    </Link>
+                  </div>
+                )}
               </div>
 
               {errorMessage && (
@@ -266,35 +259,6 @@ export default function LoginPage() {
                 {isPending ? "Processando..." : mode === "login" ? "Entrar" : "Criar conta"}
               </Button>
             </form>
-
-            <div className="mt-6 rounded-2xl border border-gray-100 bg-gray-50 p-4">
-              <p className="text-sm font-semibold text-gray-800">Esqueceu sua senha?</p>
-              <p className="mt-1 text-xs text-gray-500">
-                Informe seu email para gerar uma recuperacao segura. Neste momento, o link e processado com apoio da equipe.
-              </p>
-              <form onSubmit={handleResetRequest} className="mt-3 space-y-3">
-                <Input
-                  type="email"
-                  value={resetEmail}
-                  onChange={event => setResetEmail(event.target.value)}
-                  placeholder="seu-email@exemplo.com"
-                  required
-                />
-                {resetMessage && (
-                  <div className="rounded-2xl border border-blue-100 bg-blue-50 p-3 text-xs text-blue-700">
-                    {resetMessage}
-                  </div>
-                )}
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="w-full rounded-2xl"
-                  disabled={requestResetMutation.isPending}
-                >
-                  {requestResetMutation.isPending ? "Gerando..." : "Recuperar senha"}
-                </Button>
-              </form>
-            </div>
 
             <div className="mt-4">
               <Link href="/anunciar">
