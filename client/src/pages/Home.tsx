@@ -387,10 +387,10 @@ export default function Home() {
                 Lojas e empresas
               </p>
               <h2 className="font-display text-3xl font-black text-slate-900">
-                Encontre marcas e negocios da sua cidade
+                Descubra lojas, produtos e telefones perto de voce
               </h2>
               <p className="mt-2 text-sm text-slate-500">
-                Perfis ativos, lojas verificadas e empresas locais para voce descobrir sem sair da home.
+                Explore negocios locais, encontre contatos uteis e veja o que esta mais perto de voce.
               </p>
             </div>
             <Link href="/lojas">
