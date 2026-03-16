@@ -18,6 +18,56 @@ import {
 import { ArrowLeft, Camera, LogIn, Save, Store } from "lucide-react";
 import { toast } from "sonner";
 
+type OpeningHoursDay = {
+  enabled: boolean;
+  open: string;
+  close: string;
+};
+
+type OpeningHoursMap = Record<
+  "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat",
+  OpeningHoursDay
+>;
+
+const DEFAULT_OPENING_HOURS: OpeningHoursMap = {
+  sun: { enabled: false, open: "08:00", close: "18:00" },
+  mon: { enabled: true, open: "08:00", close: "18:00" },
+  tue: { enabled: true, open: "08:00", close: "18:00" },
+  wed: { enabled: true, open: "08:00", close: "18:00" },
+  thu: { enabled: true, open: "08:00", close: "18:00" },
+  fri: { enabled: true, open: "08:00", close: "18:00" },
+  sat: { enabled: true, open: "08:00", close: "14:00" },
+};
+
+const DAYS = [
+  { key: "mon", label: "Segunda" },
+  { key: "tue", label: "Terca" },
+  { key: "wed", label: "Quarta" },
+  { key: "thu", label: "Quinta" },
+  { key: "fri", label: "Sexta" },
+  { key: "sat", label: "Sabado" },
+  { key: "sun", label: "Domingo" },
+] as const;
+
+function parseOpeningHours(value?: string | null): OpeningHoursMap {
+  if (!value) return DEFAULT_OPENING_HOURS;
+
+  try {
+    const parsed = JSON.parse(value) as Partial<OpeningHoursMap>;
+    return {
+      sun: parsed.sun ?? DEFAULT_OPENING_HOURS.sun,
+      mon: parsed.mon ?? DEFAULT_OPENING_HOURS.mon,
+      tue: parsed.tue ?? DEFAULT_OPENING_HOURS.tue,
+      wed: parsed.wed ?? DEFAULT_OPENING_HOURS.wed,
+      thu: parsed.thu ?? DEFAULT_OPENING_HOURS.thu,
+      fri: parsed.fri ?? DEFAULT_OPENING_HOURS.fri,
+      sat: parsed.sat ?? DEFAULT_OPENING_HOURS.sat,
+    };
+  } catch {
+    return DEFAULT_OPENING_HOURS;
+  }
+}
+
 export default function AdvertiserProfile() {
   const { user, isAuthenticated, loading } = useAuth();
   const [profileName, setProfileName] = useState("");
@@ -28,6 +78,7 @@ export default function AdvertiserProfile() {
   const [cityId, setCityId] = useState<string>("none");
   const [neighborhood, setNeighborhood] = useState("");
   const [bio, setBio] = useState("");
+  const [openingHours, setOpeningHours] = useState<OpeningHoursMap>(DEFAULT_OPENING_HOURS);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
@@ -44,6 +95,7 @@ export default function AdvertiserProfile() {
     setCityId(user.cityId ? String(user.cityId) : "none");
     setNeighborhood(user.neighborhood ?? "");
     setBio(user.bio ?? "");
+    setOpeningHours(parseOpeningHours((user as { openingHoursJson?: string | null }).openingHoursJson));
     setAvatarPreview(user.avatar ?? null);
   }, [user]);
 
@@ -239,6 +291,7 @@ export default function AdvertiserProfile() {
                 cpfCnpj: cpfCnpj || undefined,
                 whatsapp: whatsapp || undefined,
                 bio: bio || undefined,
+                openingHoursJson: JSON.stringify(openingHours),
                 cityId: cityId !== "none" ? Number(cityId) : undefined,
                 neighborhood: neighborhood || undefined,
               });
@@ -354,6 +407,74 @@ export default function AdvertiserProfile() {
                 placeholder="Conte o que sua loja faz, o que vende e por que as pessoas devem comprar de voce."
                 className="min-h-28 rounded-xl"
               />
+            </div>
+
+            <div className="rounded-[24px] border border-gray-200 bg-gray-50 p-4 sm:p-5">
+              <div className="mb-4">
+                <p className="font-semibold text-gray-900">Horario de funcionamento</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Essas informacoes serao usadas para marcar sua loja como aberta agora no site.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {DAYS.map(day => {
+                  const config = openingHours[day.key];
+                  return (
+                    <div
+                      key={day.key}
+                      className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-2xl bg-white p-3"
+                    >
+                      <label className="flex items-center gap-3 text-sm font-medium text-gray-700">
+                        <input
+                          type="checkbox"
+                          checked={config.enabled}
+                          onChange={event =>
+                            setOpeningHours(current => ({
+                              ...current,
+                              [day.key]: {
+                                ...current[day.key],
+                                enabled: event.target.checked,
+                              },
+                            }))
+                          }
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                        />
+                        {day.label}
+                      </label>
+                      <Input
+                        type="time"
+                        value={config.open}
+                        disabled={!config.enabled}
+                        onChange={event =>
+                          setOpeningHours(current => ({
+                            ...current,
+                            [day.key]: {
+                              ...current[day.key],
+                              open: event.target.value,
+                            },
+                          }))
+                        }
+                        className="w-[108px] rounded-xl"
+                      />
+                      <Input
+                        type="time"
+                        value={config.close}
+                        disabled={!config.enabled}
+                        onChange={event =>
+                          setOpeningHours(current => ({
+                            ...current,
+                            [day.key]: {
+                              ...current[day.key],
+                              close: event.target.value,
+                            },
+                          }))
+                        }
+                        className="w-[108px] rounded-xl"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <Button

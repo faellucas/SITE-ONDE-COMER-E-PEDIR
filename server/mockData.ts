@@ -163,6 +163,16 @@ export const mockUsers = [
     bannerUrl:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80",
     bio: null,
+    openingHoursJson: stringifyOpeningHours({
+      ...DEFAULT_OPENING_HOURS,
+      sun: { enabled: true, open: "18:00", close: "23:00" },
+      mon: { enabled: true, open: "11:00", close: "22:30" },
+      tue: { enabled: true, open: "11:00", close: "22:30" },
+      wed: { enabled: true, open: "11:00", close: "22:30" },
+      thu: { enabled: true, open: "11:00", close: "22:30" },
+      fri: { enabled: true, open: "11:00", close: "23:30" },
+      sat: { enabled: true, open: "18:00", close: "23:30" },
+    }),
     personType: "pj",
     cpfCnpj: null,
     companyName: "Sabor da Praca",
@@ -191,6 +201,7 @@ export const mockUsers = [
     bannerUrl:
       "https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=1400&q=80",
     bio: null,
+    openingHoursJson: stringifyOpeningHours(DEFAULT_OPENING_HOURS),
     personType: "pj",
     cpfCnpj: null,
     companyName: "Auto Center Norte",
@@ -385,6 +396,8 @@ export function attachMockSellerPreviewToListings<T extends { userId: number }>(
             whatsapp: seller.whatsapp,
             cityId: seller.cityId,
             neighborhood: seller.neighborhood,
+            openingHoursJson: seller.openingHoursJson,
+            isOpenNow: isOpenNow(seller.openingHoursJson),
             isVerified: seller.isVerified,
           }
         : null,
@@ -414,6 +427,8 @@ export function getMockSellerProfile(sellerId: number) {
       bannerUrl: seller.bannerUrl,
       whatsapp: seller.whatsapp,
       bio: seller.bio,
+      openingHoursJson: seller.openingHoursJson,
+      isOpenNow: isOpenNow(seller.openingHoursJson),
       isVerified: seller.isVerified,
       createdAt: seller.createdAt,
       cityId: seller.cityId,
@@ -444,9 +459,16 @@ export function getMockListingById(id: number) {
           avatar: seller.avatar,
           bannerUrl: seller.bannerUrl,
           whatsapp: seller.whatsapp,
+          openingHoursJson: seller.openingHoursJson,
+          isOpenNow: isOpenNow(seller.openingHoursJson),
           isVerified: seller.isVerified,
           createdAt: seller.createdAt,
         }
       : null,
   };
 }
+import {
+  DEFAULT_OPENING_HOURS,
+  isOpenNow,
+  stringifyOpeningHours,
+} from "./_core/openingHours";

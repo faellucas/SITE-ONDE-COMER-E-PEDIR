@@ -59,6 +59,16 @@ async function ensureAppSchema() {
       );
     }
 
+    const [openingHoursColumns] = await connection.query(
+      "SHOW COLUMNS FROM users LIKE 'openingHoursJson'"
+    );
+
+    if (Array.isArray(openingHoursColumns) && openingHoursColumns.length === 0) {
+      await connection.query(
+        "ALTER TABLE users ADD COLUMN openingHoursJson text NULL AFTER bio"
+      );
+    }
+
     await connection.query(`
       CREATE TABLE IF NOT EXISTS password_reset_tokens (
         id int AUTO_INCREMENT PRIMARY KEY,

@@ -36,6 +36,7 @@ import {
   mockPlans,
   getMockSellerProfile,
 } from "./mockData";
+import { isOpenNow } from "./_core/openingHours";
 
 async function attachImagesToListings<T extends { id: number }>(
   db: Awaited<ReturnType<typeof getDb>>,
@@ -90,6 +91,7 @@ async function attachSellerPreviewToListings<T extends { userId: number }>(
       whatsapp: users.whatsapp,
       cityId: users.cityId,
       neighborhood: users.neighborhood,
+      openingHoursJson: users.openingHoursJson,
       isVerified: users.isVerified,
     })
     .from(users)
@@ -99,7 +101,12 @@ async function attachSellerPreviewToListings<T extends { userId: number }>(
 
   return items.map(item => ({
     ...item,
-    seller: sellersById.get(item.userId) ?? null,
+    seller: sellersById.get(item.userId)
+      ? {
+          ...sellersById.get(item.userId)!,
+          isOpenNow: isOpenNow(sellersById.get(item.userId)!.openingHoursJson),
+        }
+      : null,
   }));
 }
 
@@ -801,6 +808,7 @@ export const appRouter = router({
           whatsapp: z.string().optional(),
           bio: z.string().optional(),
           bannerUrl: z.string().optional(),
+          openingHoursJson: z.string().optional(),
           personType: z.enum(["pf", "pj"]).optional(),
           cpfCnpj: z.string().optional(),
           companyName: z.string().optional(),
@@ -1158,6 +1166,7 @@ export const appRouter = router({
             avatar: users.avatar,
             bannerUrl: users.bannerUrl,
             whatsapp: users.whatsapp,
+            openingHoursJson: users.openingHoursJson,
             isVerified: users.isVerified,
             createdAt: users.createdAt,
           })
@@ -1168,7 +1177,13 @@ export const appRouter = router({
           .update(listings)
           .set({ viewCount: sql`${listings.viewCount} + 1` })
           .where(eq(listings.id, input.id));
-        return { ...listing, images, seller };
+        return {
+          ...listing,
+          images,
+          seller: seller
+            ? { ...seller, isOpenNow: isOpenNow(seller.openingHoursJson) }
+            : null,
+        };
       }),
     sellerProfile: publicProcedure
       .input(z.object({ sellerId: z.number() }))
@@ -1191,6 +1206,7 @@ export const appRouter = router({
             bannerUrl: users.bannerUrl,
             whatsapp: users.whatsapp,
             bio: users.bio,
+            openingHoursJson: users.openingHoursJson,
             isVerified: users.isVerified,
             createdAt: users.createdAt,
             cityId: users.cityId,
@@ -1217,7 +1233,10 @@ export const appRouter = router({
         const sellerListings = await attachImagesToListings(db, sellerItems);
 
         return {
-          seller,
+          seller: {
+            ...seller,
+            isOpenNow: isOpenNow(seller.openingHoursJson),
+          },
           listings: sellerListings,
         };
       }),

@@ -26,6 +26,7 @@ export const users = mysqlTable("users", {
   avatar: text("avatar"),
   bannerUrl: text("bannerUrl"),
   bio: text("bio"),
+  openingHoursJson: text("openingHoursJson"),
   // PF or PJ
   personType: mysqlEnum("personType", ["pf", "pj"]).default("pf"),
   cpfCnpj: varchar("cpfCnpj", { length: 20 }),

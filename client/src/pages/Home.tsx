@@ -53,6 +53,7 @@ type HomeHighlightListing = {
     cityId?: number | null;
     neighborhood?: string | null;
     isVerified?: boolean | null;
+    isOpenNow?: boolean | null;
   } | null;
 };
 
@@ -307,7 +308,9 @@ export default function Home() {
 
   const foodListings = useMemo(() => {
     const source = (deliveryListings ?? []) as HomeHighlightListing[];
-    return source.filter(item => isFoodListing(item)).slice(0, 6);
+    return source
+      .filter(item => isFoodListing(item) && item.seller?.isOpenNow)
+      .slice(0, 6);
   }, [deliveryListings]);
 
   const handleSearch = (query: string) => {
@@ -907,7 +910,7 @@ export default function Home() {
                   O que tem pra comer hoje perto de mim?
                 </h2>
                 <p className="mt-2 text-sm text-slate-500">
-                  Descubra lanches e pedidos rapidos na sua regiao para matar a fome sem perder tempo.
+                  Mostramos aqui so lanches e pedidos de lojas abertas agora na sua regiao.
                 </p>
               </div>
               <Link href="/busca?q=lanche">
@@ -979,6 +982,10 @@ export default function Home() {
                                 <Star className="h-3.5 w-3.5 fill-current" />
                                 {popularityLabel}
                               </span>
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
+                                <BadgeCheck className="h-3.5 w-3.5" />
+                                Aberto agora
+                              </span>
                               <span className="text-slate-500">
                                 {listing.viewCount ? `${listing.viewCount} visualizacoes` : "Novidade de hoje"}
                               </span>
@@ -1008,7 +1015,7 @@ export default function Home() {
               <div className="rounded-[28px] bg-white p-10 text-center shadow-sm">
                 <ShoppingBag className="mx-auto h-12 w-12 text-orange-200" />
                 <p className="mt-4 text-slate-500">
-                  Os primeiros deliveries em destaque aparecerao aqui.
+                  Assim que houver lanches de lojas abertas agora, eles aparecerao aqui.
                 </p>
               </div>
             )}
