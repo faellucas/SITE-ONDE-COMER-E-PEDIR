@@ -19,6 +19,8 @@ import {
   Home as HomeIcon,
   LayoutGrid,
   MapPin,
+  Menu,
+  MessageCircle,
   Search,
   Shield,
   ShoppingBag,
@@ -155,6 +157,7 @@ export default function Home() {
   const { isAuthenticated } = useAuth();
   const [location, navigate] = useLocation();
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: categories } = trpc.public.categories.useQuery();
   const { data: topCategories } = trpc.public.topCategories.useQuery({
@@ -822,18 +825,12 @@ export default function Home() {
             <Search className="h-5 w-5" />
             Buscar
           </button>
-          <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE} className="flex flex-col items-center gap-1 rounded-2xl bg-orange-500 px-2 py-2 text-xs font-semibold text-white">
+          <Link
+            href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}
+            className="flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-xs font-semibold text-slate-700"
+          >
             <Zap className="h-5 w-5" />
             Anunciar
-          </Link>
-          <Link
-            href="/lojas"
-            className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-xs font-medium ${
-              location.startsWith("/lojas") ? "bg-slate-900 text-white" : "text-slate-700"
-            }`}
-          >
-            <Store className="h-5 w-5" />
-            Lojas
           </Link>
           <Link
             href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE}
@@ -843,11 +840,56 @@ export default function Home() {
                 : "text-slate-700"
             }`}
           >
-            <CircleUserRound className="h-5 w-5" />
-            Perfil
+            <MessageCircle className="h-5 w-5" />
+            Chat
           </Link>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(current => !current)}
+            className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-xs font-medium ${
+              mobileMenuOpen ? "bg-slate-900 text-white" : "text-slate-700"
+            }`}
+          >
+            <Menu className="h-5 w-5" />
+            Menu
+          </button>
         </div>
       </nav>
+
+      {mobileMenuOpen && (
+        <div className="fixed inset-x-4 bottom-24 z-40 rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_20px_60px_rgba(15,23,42,0.18)] md:hidden">
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/guia"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
+            >
+              Guia Local
+            </Link>
+            <Link
+              href="/lojas"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
+            >
+              Lojas
+            </Link>
+            <Link
+              href="/favoritos"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
+            >
+              Favoritos
+            </Link>
+            <Link
+              href={isAuthenticated ? "/anunciante" : LOGIN_ROUTE}
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
+            >
+              Perfil
+            </Link>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
