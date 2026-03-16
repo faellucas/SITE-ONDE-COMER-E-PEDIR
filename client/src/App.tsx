@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import MobileBottomNav from "./components/MobileBottomNav";
 import PwaInstallPrompt from "./components/PwaInstallPrompt";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import HomePage from "./pages/Home";
@@ -80,6 +81,7 @@ function App() {
           <Toaster />
           <PwaInstallPrompt />
           <Router />
+          <MobileBottomNav />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
