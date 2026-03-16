@@ -55,12 +55,11 @@ const HEADER_SHORTCUTS = [
 ];
 
 const HEADER_PILLS = [
-  { label: "Categorias", href: "/busca", icon: Home, tone: "bg-slate-100 text-slate-700" },
-  { label: "Favoritos", href: "/favoritos", icon: Heart, tone: "bg-rose-50 text-rose-600" },
   { label: "Saude", href: "/busca?q=saude", icon: Stethoscope, tone: "bg-emerald-50 text-emerald-700" },
   { label: "Educacao", href: "/busca?q=educacao", icon: Briefcase, tone: "bg-orange-50 text-orange-700" },
   { label: "Delivery", href: "/categoria/delivery", icon: ShoppingBag, tone: "bg-amber-50 text-amber-700" },
   { label: "Imoveis", href: "/busca?q=imoveis", icon: Home, tone: "bg-cyan-50 text-cyan-700" },
+  { label: "Veiculos", href: "/busca?q=veiculos", icon: Zap, tone: "bg-blue-50 text-blue-700" },
   { label: "Servicos", href: "/busca?q=servicos", icon: Wrench, tone: "bg-violet-50 text-violet-700" },
   { label: "Lojas", href: "/lojas", icon: Store, tone: "bg-blue-50 text-blue-700" },
   { label: "Guia", href: "/guia", icon: HeartHandshake, tone: "bg-indigo-50 text-indigo-700" },
