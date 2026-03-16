@@ -385,8 +385,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="lojas-empresas" className="container pb-8 pt-4 sm:py-8">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <section id="lojas-empresas" className="container pb-4 pt-3 sm:py-8">
+          <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">
                 Lojas e empresas
@@ -584,7 +584,7 @@ export default function Home() {
           )}
         </section>
 
-        <section id="marketplace" className="container py-6 sm:py-8">
+        <section id="marketplace" className="container py-4 sm:py-8">
           <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-600">
@@ -699,8 +699,8 @@ export default function Home() {
           )}
         </section>
 
-        <section className="container py-8">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <section className="container py-5 sm:py-8">
+          <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-600">
                 Navegacao rapida
@@ -750,7 +750,7 @@ export default function Home() {
           )}
         </section>
 
-        <section className="bg-orange-50 py-10">
+        <section className="bg-orange-50 py-6 sm:py-10">
           <div className="container">
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -796,7 +796,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="container py-10">
+        <section className="container py-6 sm:py-10">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">
