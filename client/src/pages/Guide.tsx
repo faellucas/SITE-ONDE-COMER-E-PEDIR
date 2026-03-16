@@ -100,14 +100,14 @@ export default function GuidePage() {
               Entradas diretas para o que as pessoas mais procuram.
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 xl:grid-cols-3">
             {GUIDE_SECTIONS.map(item => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/30"
+                  className="group min-w-[86%] snap-center rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/30 sm:min-w-0"
                 >
                   <div className={`inline-flex rounded-2xl p-3 ${item.tone}`}>
                     <Icon className="h-5 w-5" />
