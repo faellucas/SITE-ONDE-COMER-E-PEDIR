@@ -66,7 +66,7 @@ export default function GuidePage() {
     <div className="min-h-screen bg-[linear-gradient(180deg,#fff8ef_0%,#f8fafc_35%,#f8fafc_100%)]">
       <Header />
       <main className="container py-6">
-        <section className="rounded-[32px] bg-[linear-gradient(135deg,#0f172a_0%,#1d4ed8_55%,#0ea5e9_130%)] p-6 text-white shadow-[0_20px_70px_rgba(15,23,42,0.18)] sm:p-8">
+        <section className="hidden rounded-[32px] bg-[linear-gradient(135deg,#0f172a_0%,#1d4ed8_55%,#0ea5e9_130%)] p-6 text-white shadow-[0_20px_70px_rgba(15,23,42,0.18)] sm:block sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
             Guia local
           </p>
