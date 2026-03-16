@@ -20,8 +20,11 @@ import {
 } from "@/components/ui/select";
 import {
   Bell,
+  Briefcase,
   ChevronDown,
   Heart,
+  HeartHandshake,
+  Home,
   LayoutDashboard,
   LogOut,
   MapPin,
@@ -30,7 +33,11 @@ import {
   Search,
   Settings,
   Shield,
+  ShoppingBag,
+  Store,
+  Stethoscope,
   User,
+  Wrench,
   X,
   Zap,
 } from "lucide-react";
@@ -40,6 +47,24 @@ interface HeaderProps {
   onCityChange?: (cityId: number | null) => void;
   onSearch?: (q: string) => void;
 }
+
+const HEADER_SHORTCUTS = [
+  { label: "Guia Local", href: "/guia" },
+  { label: "Marketplace", href: "/busca" },
+  { label: "Lojas", href: "/lojas" },
+];
+
+const HEADER_PILLS = [
+  { label: "Categorias", href: "/busca", icon: Home, tone: "bg-slate-100 text-slate-700" },
+  { label: "Favoritos", href: "/favoritos", icon: Heart, tone: "bg-rose-50 text-rose-600" },
+  { label: "Saude", href: "/busca?q=saude", icon: Stethoscope, tone: "bg-emerald-50 text-emerald-700" },
+  { label: "Educacao", href: "/busca?q=educacao", icon: Briefcase, tone: "bg-orange-50 text-orange-700" },
+  { label: "Delivery", href: "/categoria/delivery", icon: ShoppingBag, tone: "bg-amber-50 text-amber-700" },
+  { label: "Imoveis", href: "/busca?q=imoveis", icon: Home, tone: "bg-cyan-50 text-cyan-700" },
+  { label: "Servicos", href: "/busca?q=servicos", icon: Wrench, tone: "bg-violet-50 text-violet-700" },
+  { label: "Lojas", href: "/lojas", icon: Store, tone: "bg-blue-50 text-blue-700" },
+  { label: "Guia", href: "/guia", icon: HeartHandshake, tone: "bg-indigo-50 text-indigo-700" },
+];
 
 export default function Header({
   selectedCity,
@@ -66,19 +91,14 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 max-w-full overflow-x-clip border-b border-gray-100 bg-white shadow-md">
-      <div className="hidden bg-brand-gradient px-4 py-1.5 text-center text-[11px] font-medium text-white sm:block sm:text-xs">
-        Encontre lojas, servicos, produtos e negocios perto de voce no portal
-        local do Norte Pioneiro.
-      </div>
-
+    <header className="sticky top-0 z-50 max-w-full overflow-x-clip border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="container">
-        <div className="hidden items-center gap-2 py-3 sm:flex sm:gap-3">
-          <Link href="/" className="shrink-0 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient shadow-md">
+        <div className="hidden items-center gap-4 py-3 xl:flex">
+          <Link href="/" className="flex shrink-0 items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-gradient shadow-md">
               <Zap className="h-5 w-5 text-white" />
             </div>
-            <div className="hidden sm:block">
+            <div>
               <span className="font-display text-xl font-black text-gray-900">
                 Norte
               </span>
@@ -91,132 +111,125 @@ export default function Header({
             </div>
           </Link>
 
-          <div className="hidden shrink-0 items-center gap-1 text-sm text-gray-600 md:flex">
-            <MapPin className="h-4 w-4 text-blue-600" />
-            <Select
-              value={selectedCity ? String(selectedCity) : "all"}
-              onValueChange={v =>
-                onCityChange?.(v === "all" ? null : Number(v))
-              }
-            >
-              <SelectTrigger className="h-auto w-[140px] border-0 p-0 text-sm font-medium text-gray-700 shadow-none focus:ring-0">
-                <SelectValue placeholder="Todas as cidades" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as cidades</SelectItem>
-                {cities?.map(city => (
-                  <SelectItem key={city.id} value={String(city.id)}>
-                    {city.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <form onSubmit={handleSearch} className="min-w-0 max-w-2xl flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                value={searchQ}
-                onChange={e => setSearchQ(e.target.value)}
-                placeholder="Buscar lojas, produtos, servicos, imoveis..."
-                className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-20 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 sm:pr-24"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-brand-gradient px-2.5 py-1.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-90 sm:px-3 sm:text-xs"
+          <form onSubmit={handleSearch} className="min-w-0 max-w-4xl flex-1">
+            <div className="flex items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQ}
+                  onChange={e => setSearchQ(e.target.value)}
+                  placeholder="Buscar produtos, servicos..."
+                  className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-sm text-slate-700 outline-none"
+                />
+              </div>
+              <div className="h-8 w-px bg-slate-200" />
+              <Select
+                value={selectedCity ? String(selectedCity) : "all"}
+                onValueChange={value =>
+                  onCityChange?.(value === "all" ? null : Number(value))
+                }
               >
+                <SelectTrigger className="h-12 w-[170px] border-0 bg-transparent px-3 text-sm font-medium text-slate-700 shadow-none focus:ring-0">
+                  <MapPin className="mr-1 h-4 w-4 text-blue-600" />
+                  <SelectValue placeholder="Todas as cidades" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as cidades</SelectItem>
+                  {cities?.map(city => (
+                    <SelectItem key={city.id} value={String(city.id)}>
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="submit" className="mr-2 rounded-xl bg-brand-gradient px-4 text-white">
                 Buscar
-              </button>
+              </Button>
             </div>
           </form>
 
+          <nav className="flex shrink-0 items-center gap-4 text-sm font-semibold text-slate-600">
+            {HEADER_SHORTCUTS.map(item => (
+              <Link key={item.label} href={item.href} className="transition-colors hover:text-slate-900">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
           <div className="flex shrink-0 items-center gap-2">
-            <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
-              <Button className="hidden items-center gap-1.5 rounded-xl bg-orange-gradient px-4 font-bold text-white shadow-md hover:opacity-90 sm:flex">
-                <Plus className="h-4 w-4" />
-                Anunciar
-              </Button>
-            </Link>
+            <button
+              type="button"
+              onClick={() => navigate(isAuthenticated ? "/anunciante" : LOGIN_ROUTE)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700"
+            >
+              <Bell className="h-4 w-4" />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange-500" />
+            </button>
 
             {isAuthenticated ? (
-              <>
-                <Link href="/favoritos">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-gray-600 hover:text-red-500"
-                  >
-                    <Heart className="h-5 w-5" />
-                  </Button>
-                </Link>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center gap-2 px-2">
-                      <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-brand-gradient text-sm font-bold text-white">
-                        {user?.avatar ? (
-                          <img
-                            src={user.avatar}
-                            alt={displayName}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          displayInitial
-                        )}
-                      </div>
-                      <ChevronDown className="hidden h-3 w-3 text-gray-500 sm:block" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-semibold text-gray-900">
-                        {displayName}
-                      </p>
-                      <p className="text-xs text-gray-500">{user?.email}</p>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-2 rounded-2xl border border-slate-200 px-2">
+                    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-brand-gradient text-sm font-bold text-white">
+                      {user?.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt={displayName}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        displayInitial
+                      )}
                     </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate("/anunciante")}>
-                      <LayoutDashboard className="mr-2 h-4 w-4" /> Meu Painel
+                    <ChevronDown className="h-3 w-3 text-slate-500" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-semibold text-slate-900">{displayName}</p>
+                    <p className="text-xs text-slate-500">{user?.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/anunciante")}>
+                    <LayoutDashboard className="mr-2 h-4 w-4" /> Meu Painel
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/favoritos")}>
+                    <Heart className="mr-2 h-4 w-4" /> Favoritos
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/anunciante/meus-dados")}>
+                    <Settings className="mr-2 h-4 w-4" /> Configuracoes
+                  </DropdownMenuItem>
+                  {user?.role === "admin" && (
+                    <DropdownMenuItem onClick={() => navigate("/admin")}>
+                      <Shield className="mr-2 h-4 w-4" /> Admin
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => navigate("/anunciante/meus-dados")}
-                    >
-                      <Settings className="mr-2 h-4 w-4" /> Meus dados
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/favoritos")}>
-                      <Heart className="mr-2 h-4 w-4" /> Favoritos
-                    </DropdownMenuItem>
-                    {user?.role === "admin" && (
-                      <DropdownMenuItem onClick={() => navigate("/admin")}>
-                        <Shield className="mr-2 h-4 w-4" /> Admin
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => logout()}
-                      className="text-red-600"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" /> Sair
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => logout()} className="text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" /> Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link href={LOGIN_ROUTE}>
-                <Button
-                  variant="outline"
-                  className="hidden items-center gap-1.5 rounded-xl border-blue-200 font-semibold text-blue-700 hover:bg-blue-50 sm:flex"
-                >
-                  <User className="h-4 w-4" />
-                  Entrar
+                <Button variant="outline" className="rounded-2xl border-slate-200">
+                  <User className="mr-2 h-4 w-4" />
+                  Perfil
                 </Button>
               </Link>
             )}
+
+            <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
+              <Button className="rounded-2xl bg-orange-gradient px-4 font-bold text-white shadow-md hover:opacity-90">
+                <Plus className="mr-2 h-4 w-4" />
+                Anunciar Agora
+              </Button>
+            </Link>
           </div>
         </div>
 
-        <div className="space-y-3 py-3 sm:hidden">
+        <div className="space-y-3 py-3 xl:hidden">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex min-w-0 items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-gradient shadow-md">
@@ -227,20 +240,18 @@ export default function Header({
                   Norte
                   <span style={{ color: "oklch(0.68 0.19 45)" }}>Vivo</span>
                 </p>
-                <p className="text-[11px] font-medium text-gray-500">
-                  Guia, lojas e marketplace
-                </p>
+                <p className="text-[11px] font-medium text-gray-500">Guia, lojas e marketplace</p>
               </div>
             </Link>
 
             <div className="ml-auto flex items-center gap-2">
               <Select
                 value={selectedCity ? String(selectedCity) : "all"}
-                onValueChange={v =>
-                  onCityChange?.(v === "all" ? null : Number(v))
+                onValueChange={value =>
+                  onCityChange?.(value === "all" ? null : Number(value))
                 }
               >
-                <SelectTrigger className="h-10 max-w-[140px] rounded-2xl border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-700 shadow-none">
+                <SelectTrigger className="h-10 max-w-[150px] rounded-2xl border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-700 shadow-none">
                   <MapPin className="mr-1 h-4 w-4 text-blue-600" />
                   <SelectValue placeholder="Cidade" />
                 </SelectTrigger>
@@ -263,26 +274,25 @@ export default function Header({
                 <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange-500" />
               </button>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-2xl border border-slate-200 bg-slate-50"
-                onClick={() => setMobileOpen(!mobileOpen)}
+              <button
+                type="button"
+                onClick={() => setMobileOpen(current => !current)}
+                className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700"
               >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
+                {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </button>
             </div>
           </div>
 
           <form onSubmit={handleSearch}>
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 value={searchQ}
                 onChange={e => setSearchQ(e.target.value)}
-                placeholder="O que voce procura no Norte Pioneiro?"
-                className="h-12 w-full rounded-[20px] border border-slate-200 bg-slate-50 py-3 pl-11 pr-24 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Buscar produtos, servicos..."
+                className="h-12 w-full rounded-[20px] border border-slate-200 bg-slate-50 py-3 pl-11 pr-24 text-sm text-slate-700 outline-none"
               />
               <button
                 type="submit"
@@ -292,37 +302,70 @@ export default function Header({
               </button>
             </div>
           </form>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            {HEADER_SHORTCUTS.map(item => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
+              <Button className="whitespace-nowrap rounded-full bg-orange-gradient px-4 text-white">
+                <Plus className="mr-2 h-4 w-4" />
+                Anunciar
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-slate-100 bg-white">
+        <div className="container">
+          <div className="flex items-center gap-2 overflow-x-auto py-3">
+            {HEADER_PILLS.map(item => {
+              const Icon = item.icon;
+              const href = item.label === "Favoritos" && !isAuthenticated ? LOGIN_ROUTE : item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={href}
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                >
+                  <span className={`inline-flex rounded-full p-2 ${item.tone}`}>
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {mobileOpen && (
-        <div className="space-y-3 border-t border-gray-100 bg-white px-4 py-4 sm:hidden">
-          <Link href={isAuthenticated ? "/anunciante/novo" : LOGIN_ROUTE}>
-            <Button className="w-full rounded-xl bg-orange-gradient font-bold text-white">
-              <Plus className="mr-2 h-4 w-4" /> Anunciar gratis
-            </Button>
-          </Link>
-
-          {isAuthenticated ? (
-            <>
-              <Link href="/anunciante">
-                <Button variant="outline" className="w-full rounded-xl">
-                  <LayoutDashboard className="mr-2 h-4 w-4" /> Abrir painel
-                </Button>
-              </Link>
-              <Link href="/favoritos">
-                <Button variant="outline" className="w-full rounded-xl">
-                  <Heart className="mr-2 h-4 w-4" /> Favoritos
-                </Button>
-              </Link>
-            </>
-          ) : (
-            <Link href={LOGIN_ROUTE}>
-              <Button variant="outline" className="w-full rounded-xl">
-                <User className="mr-2 h-4 w-4" /> Entrar / Cadastrar
-              </Button>
-            </Link>
-          )}
+        <div className="border-t border-slate-100 bg-white px-4 py-4 xl:hidden">
+          <div className="grid grid-cols-2 gap-3">
+            {HEADER_PILLS.map(item => {
+              const Icon = item.icon;
+              const href = item.label === "Favoritos" && !isAuthenticated ? LOGIN_ROUTE : item.href;
+              return (
+                <Link
+                  key={`mobile-${item.label}`}
+                  href={href}
+                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700"
+                >
+                  <span className={`inline-flex rounded-full p-2 ${item.tone}`}>
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </header>
