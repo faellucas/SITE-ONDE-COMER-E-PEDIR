@@ -285,7 +285,7 @@ export default function NewListing() {
         await utils.advertiser.stats.invalidate();
         await listingForEditQuery.refetch();
         toast.success("Anuncio atualizado com sucesso!");
-        navigate("/anunciante");
+        navigate("/painel-anunciante");
       } catch (error: any) {
         toast.error("Erro ao atualizar anuncio: " + (error?.message ?? "Tente novamente"));
       }
@@ -301,7 +301,7 @@ export default function NewListing() {
       await uploadPendingImages(data.id);
       await utils.advertiser.stats.invalidate();
       toast.success("Anuncio criado com sucesso!");
-      navigate("/anunciante");
+      navigate("/painel-anunciante");
     } catch (error: any) {
       toast.error("Erro ao criar anuncio: " + (error?.message ?? "Tente novamente"));
     }
@@ -327,7 +327,7 @@ export default function NewListing() {
       <Header />
 
       <div className="container max-w-2xl py-4 sm:py-6">
-        <Link href="/anunciante" className="mb-6 flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-blue-600">
+        <Link href="/painel-anunciante" className="mb-6 flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-blue-600">
           <ArrowLeft className="w-4 h-4" /> Voltar ao painel
         </Link>
 

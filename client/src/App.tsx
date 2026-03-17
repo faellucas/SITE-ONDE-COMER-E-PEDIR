@@ -58,10 +58,11 @@ function Router() {
       <Route path="/como-funciona" component={HowItWorksPage} />
       <Route path="/termos" component={TermsPage} />
       <Route path="/privacidade" component={PrivacyPage} />
-      <Route path="/anunciante" component={AdvertiserDashboard} />
+      <Route path="/anunciante" component={MyAccountPanel} />
       <Route path="/anunciante/meus-dados" component={AdvertiserProfile} />
-      <Route path="/painel" component={AdvertiserDashboard} />
+      <Route path="/painel" component={MyAccountPanel} />
       <Route path="/cliente" component={MyAccountPanel} />
+      <Route path="/painel-anunciante" component={AdvertiserDashboard} />
       <Route path="/anunciante/novo" component={NewListing} />
       <Route path="/anunciante/editar/:id" component={NewListing} />
       <Route path="/anunciar" component={NewListing} />

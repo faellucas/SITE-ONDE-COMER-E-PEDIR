@@ -205,7 +205,7 @@ export default function AdvertiserProfile() {
       <Header />
       <main className="container max-w-4xl py-4 sm:py-6">
         <Link
-          href="/anunciante"
+          href="/painel-anunciante"
           className="mb-6 flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
